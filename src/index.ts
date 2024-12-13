@@ -1,12 +1,11 @@
+    import { ArbitrageOrchestrator } from './core/arbitrageOrchestrator';
 
-import { ArbitrageBot } from './bot';
+    async function main() {
+        console.log('Starting arbitrage bot...');
+        const orchestrator = new ArbitrageOrchestrator();
+    
+        await orchestrator.initialize();
+        await orchestrator.startArbitrageLoop();
+    }
 
-async function main() {
-    const bot = new ArbitrageBot();
-    await bot.start();
-}
-
-main().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
-});
+    main().catch(console.error);

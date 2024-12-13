@@ -19,8 +19,12 @@
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "binance-api-node": "^0.12.9",
+    "bybit-api": "^3.10.27",
     "ccxt": "^4.4.39",
     "dotenv": "^16.4.7",
+    "ethers": "^6.13.4",
+    "kucoin-node-api": "^2.1.5",
     "winston": "^3.17.0"
   }
 }
