@@ -1,6 +1,17 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+interface ExchangeConfig {
+    name: string;
+    apiKey: string;
+    apiSecret: string;
+}
+
+interface PairConfig {
+    minSpread: number;
+    maxSlippage: number;
+}
+
 export const config = {
     exchanges: [
         {
@@ -30,7 +41,10 @@ export const config = {
             apiKey: process.env.POLONIEX_API_KEY || '',
             apiSecret: process.env.POLONIEX_API_SECRET || ''
         }
-    ],    
+    ] as ExchangeConfig[],
+    
+    minProfitPercent: 0.5,
+    
     tradingPairs: [
         'BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'ADA/USDT',
         'DOGE/USDT', 'DOT/USDT', 'MATIC/USDT', 'LINK/USDT', 'AVAX/USDT',
@@ -126,5 +140,25 @@ export const config = {
         'BTC/USDT': { minSpread: 0.001, maxSlippage: 0.002 },
         'ETH/USDT': { minSpread: 0.002, maxSlippage: 0.003 },
         'SOL/USDT': { minSpread: 0.003, maxSlippage: 0.004 }
-    }
+    },
+
+    exchangePairs: {
+        binance: [
+            'BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'SOL/USDT', 'XRP/USDT', 'ADA/USDT', 'MATIC/USDT',
+            'ETH/BTC', 'BNB/BTC', 'SOL/BTC', 'XRP/BTC', 'ADA/BTC',
+            'BNB/ETH', 'LINK/ETH', 'MATIC/ETH'
+        ],
+        kraken: [
+            'BTC/USD', 'ETH/USD', 'SOL/USD', 'XRP/USD', 'ADA/USD',
+            'ETH/BTC', 'SOL/BTC', 'XRP/BTC', 'ADA/BTC'
+        ],
+        bybit: [
+            'BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT',
+            'ETH/BTC', 'SOL/BTC', 'XRP/BTC'
+        ],
+        poloniex: [
+            'BTC/USDT', 'ETH/USDT', 'XRP/USDT',
+            'ETH/BTC', 'XRP/BTC'
+        ]
+    } as Record<string, string[]>,
 };

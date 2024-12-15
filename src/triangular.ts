@@ -1,128 +1,133 @@
 import { ExchangeManager } from './exchanges/exchangeManager';
 
+type ValidPairs = {
+    [exchange: string]: {
+        [key in 'USDT' | 'BTC' | 'ETH']?: string[];
+    };
+};
+
 export class TriangularArbitrage {
     private readonly minProfitPercent: number = 0.5;
     private exchangeManager: ExchangeManager;
+
+    // Define valid pairs for each exchange
+    private readonly validPairs: ValidPairs = {
+        'binance': {
+            'USDT': [
+                'BTC/USDT', 'ETH/USDT', 'BNB/USDT',
+                'SOL/USDT', 'XRP/USDT', 'ADA/USDT'
+            ],
+            'BTC': [
+                'ETH/BTC', 'BNB/BTC', 'SOL/BTC',
+                'XRP/BTC', 'ADA/BTC'
+            ],
+            'ETH': [
+                'BNB/ETH', 'LINK/ETH', 'MATIC/ETH'
+            ]
+        },
+        'bybit': {
+            'USDT': [
+                'BTC/USDT', 'ETH/USDT', 'SOL/USDT',
+                'XRP/USDT'
+            ],
+            'BTC': [
+                'ETH/BTC', 'SOL/BTC', 'XRP/BTC'
+            ],
+            'ETH': [
+                'LINK/ETH'
+            ]
+        },
+        'kraken': {
+            'USDT': [
+                'BTC/USDT', 'ETH/USDT', 'SOL/USDT',
+                'XRP/USDT'
+            ],
+            'BTC': [
+                'ETH/BTC', 'XRP/BTC'
+            ],
+            'ETH': [
+                'LINK/ETH'
+            ]
+        },
+        'poloniex': {
+            'USDT': [
+                'BTC/USDT', 'ETH/USDT', 'XRP/USDT'
+            ],
+            'BTC': [
+                'ETH/BTC', 'XRP/BTC'
+            ],
+            'ETH': [
+                'LINK/ETH'
+            ]
+        }
+    };
 
     constructor(exchangeManager: ExchangeManager) {
         this.exchangeManager = exchangeManager;
     }
 
-    async findTriangularOpportunities(exchange: string, baseAsset: string = 'USDT'): Promise<void> {
-        // Define multiple base assets
-        const baseAssets = [
-            baseAsset,    // Default (USDT)
-            'USDC',
-            'BUSD',
-            'DAI',
-            'EUR',
-            'GBP',
-            'BTC',
-            'ETH'
-        ];
+    async findTriangularOpportunities(exchange: string, baseAsset: 'USDT' | 'BTC' | 'ETH' = 'USDT'): Promise<void> {
+        console.log(`\n📊 Scanning ${exchange.toUpperCase()} for triangular opportunities...`);
+        console.log(`   Scanning ${baseAsset}...`);
 
-        // Combine static and dynamic triangles
-        let allTriangles: string[][] = [];
-
-        // Add existing static triangles for each base asset
-        for (const base of baseAssets) {
-            const staticTriangles = this.getStaticTriangles(base);
-            allTriangles = [...allTriangles, ...staticTriangles];
+        const exchangePairs = this.validPairs[exchange]?.[baseAsset] || [];
+        if (!exchangePairs.length) {
+            console.log(`   No valid pairs found for ${exchange} with ${baseAsset}`);
+            return;
         }
 
-        // Add dynamically generated triangles
-        for (const base of baseAssets) {
-            const dynamicTriangles = this.generateDynamicTriangles(base);
-            allTriangles = [...allTriangles, ...dynamicTriangles];
-        }
-
-        // Process all triangles
-        for (const triangle of allTriangles) {
+        const triangles = this.getValidTriangles(exchange, baseAsset);
+        
+        for (const triangle of triangles) {
             try {
                 const rates = await this.fetchTriangleRates(exchange, triangle);
                 const profit = this.calculateTriangularProfit(rates);
                 
                 if (profit > this.minProfitPercent) {
-                    console.log(`💰 Triangular Opportunity Found on ${exchange}:`);
+                    console.log('\n💰 Triangular Opportunity Found:');
                     console.log(`🔄 Path: ${triangle.join(' -> ')}`);
                     console.log(`📈 Profit: ${profit.toFixed(2)}%`);
-                    console.log(`⚡ Base Asset: ${triangle[0].split('/')[1]}\n`);
+                    console.log(`⚡ Exchange: ${exchange}`);
+                    console.log(`💱 Base Asset: ${baseAsset}\n`);
                 }
             } catch (error) {
+                // Silently skip invalid pairs
                 continue;
             }
         }
+        console.log('✓');
     }
 
-    private generateDynamicTriangles(baseAsset: string): string[][] {
-        const majorCoins = [
-            'BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'ADA', 'MATIC',
-            'AVAX', 'DOT', 'LINK', 'UNI', 'AAVE', 'ATOM', 'FTM'
-        ];
+    private getValidTriangles(exchange: string, baseAsset: 'USDT' | 'BTC' | 'ETH'): string[][] {
+        const triangles: string[][] = [];
+        const exchangePairs = this.validPairs[exchange]?.[baseAsset] || [];
         
-        const defiTokens = [
-            'UNI', 'AAVE', 'SUSHI', 'CRV', 'SNX', 'COMP', '1INCH',
-            'YFI', 'MKR', 'BAL', 'PERP', 'DYDX', 'GMX'
-        ];
-
-        const dynamicTriangles: string[][] = [];
-
-        // Generate major coin triangles
-        for (const coin1 of majorCoins) {
-            for (const coin2 of majorCoins) {
-                if (coin1 !== coin2) {
-                    dynamicTriangles.push([
-                        `${coin1}/${baseAsset}`,
-                        `${coin2}/${coin1}`,
-                        `${coin2}/${baseAsset}`
-                    ]);
+        for (const firstPair of exchangePairs) {
+            const [token1] = firstPair.split('/');
+            if (token1 && this.validPairs[exchange]?.[token1 as 'BTC' | 'ETH']) {
+                const secondPairs = this.validPairs[exchange][token1 as 'BTC' | 'ETH'] || [];
+                
+                for (const secondPair of secondPairs) {
+                    const [token2] = secondPair.split('/');
+                    const completingPair = `${token2}/${baseAsset}`;
+                    if (exchangePairs.includes(completingPair)) {
+                        triangles.push([firstPair, secondPair, completingPair]);
+                    }
                 }
             }
         }
-
-        // Generate DeFi token triangles
-        for (const defi1 of defiTokens) {
-            for (const defi2 of defiTokens) {
-                if (defi1 !== defi2) {
-                    dynamicTriangles.push([
-                        `${defi1}/${baseAsset}`,
-                        `${defi2}/${defi1}`,
-                        `${defi2}/${baseAsset}`
-                    ]);
-                }
-            }
-        }
-
-        // Generate mixed triangles (major coins with DeFi tokens)
-        for (const major of majorCoins) {
-            for (const defi of defiTokens) {
-                dynamicTriangles.push([
-                    `${major}/${baseAsset}`,
-                    `${defi}/${major}`,
-                    `${defi}/${baseAsset}`
-                ]);
-            }
-        }
-
-        return dynamicTriangles;
-    }
-
-    private getStaticTriangles(baseAsset: string): string[][] {
-        // Your existing static triangles array here
-        return [
-            // ... all your existing triangles ...
-        ];
+        
+        return triangles;
     }
 
     private async fetchTriangleRates(exchange: string, triangle: string[]): Promise<number[]> {
         const rates: number[] = [];
         for (const pair of triangle) {
-            try {
-                const rate = await this.exchangeManager.fetchPrice(exchange, pair);
-                rates.push(rate);
-            } catch (error) {
-                throw new Error(`Failed to fetch rate for ${pair}`);
+            const rate = await this.exchangeManager.fetchPrice(exchange, pair);
+            if (rate <= 0) {
+                throw new Error(`Invalid rate for ${pair}`);
             }
+            rates.push(rate);
         }
         return rates;
     }

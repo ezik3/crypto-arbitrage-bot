@@ -1,8 +1,10 @@
-
 import { ethers } from 'ethers';
 
 export class MarketImpactAnalyzer {
-    async analyzeMarketImpact(params: any) {
+    public async analyzeMarketImpact({ timeframe, minProfit }: { timeframe: string, minProfit: number }) {
+        console.log('Starting market impact analysis...');
+        console.log(`Analyzing with timeframe: ${timeframe}, minProfit: ${minProfit}`);
+        
         return {
             opportunities: [
                 {

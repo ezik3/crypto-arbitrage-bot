@@ -41,20 +41,17 @@ export class ExchangeManager implements ExchangeManagerInterface {
 
     public async fetchPrice(exchangeName: string, symbol: string): Promise<number> {
         try {
-            switch (exchangeName.toLowerCase()) {
-                case 'binance':
-                    const binancePrice = await this.binanceClient.prices();
-                    return parseFloat(binancePrice[symbol]) || 0;
-                default:
-                    const exchange = this.exchanges.get(exchangeName.toLowerCase());
-                    if (exchange) {
-                        const ticker = await exchange.fetchTicker(symbol);
-                        return ticker.last || 0;
-                    }
-                    throw new Error(`Exchange ${exchangeName} not supported`);
+            const exchange = this.exchanges.get(exchangeName);
+            if (!exchange) {
+                return 0;
             }
+
+            const ticker = await exchange.fetchTicker(symbol);
+            return ticker.last || 0;
         } catch (error) {
-            console.error(`Error fetching price for ${symbol} on ${exchangeName}:`, error);
+            if (!(error instanceof Error && error.message.includes('BadSymbol'))) {
+                console.error(`Error fetching ${symbol} on ${exchangeName}:`, error);
+            }
             return 0;
         }
     }
