@@ -1,4 +1,4 @@
-import { ExchangeManager } from './exchanges';
+import { ExchangeManager } from './exchanges/exchangeManager';
 
 export class TriangularArbitrage {
     private readonly minProfitPercent: number = 0.5;

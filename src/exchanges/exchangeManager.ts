@@ -1,90 +1,97 @@
-  import Binance from 'binance-api-node';
-  const KucoinAPI = require('kucoin-node-api') as any;
-  import { LinearClient } from 'bybit-api';
+import Binance from 'binance-api-node';
+const KucoinAPI = require('kucoin-node-api') as any;
+import { LinearClient } from 'bybit-api';
+import { ExchangeConfig } from '../types';
+import { ExchangeManagerInterface } from './types';
+import * as ccxt from 'ccxt';
 
-  export class ExchangeManager {
-      private binanceClient: ReturnType<typeof Binance> = Binance();
-      private kucoinClient: any;
-      private bybitClient: LinearClient = new LinearClient();
+export class ExchangeManager implements ExchangeManagerInterface {
+    public exchanges: Map<string, ccxt.Exchange> = new Map();
+    private binanceClient: ReturnType<typeof Binance> = Binance();
+    private kucoinClient: any;
+    private bybitClient: LinearClient = new LinearClient();
     
-      private tradingPairs = [
-          'BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'ADA/USDT', 'SOL/USDT'
-      ];
+    constructor(exchangeConfigs: ExchangeConfig[]) {
+        this.initializeClients();
+        this.initialize(exchangeConfigs);
+    }
 
-      constructor() {
-          this.initializeClients();
-      }
+    public async initialize(exchangeConfigs: ExchangeConfig[]): Promise<void> {
+        await this.initializeExchanges(exchangeConfigs);
+    }
 
-      private initializeClients() {
-          this.binanceClient = Binance({
-              apiKey: process.env.BINANCE_API_KEY,
-              apiSecret: process.env.BINANCE_API_SECRET
-          });
+    public async initializeExchanges(exchangeConfigs: ExchangeConfig[]): Promise<void> {
+        try {
+            this.initializeClients();
 
-          KucoinAPI.init({
-              apiKey: process.env.KUCOIN_API_KEY,
-              secretKey: process.env.KUCOIN_API_SECRET,
-              passphrase: process.env.KUCOIN_API_PASSPHRASE
-          });
-          this.kucoinClient = KucoinAPI;
+            for (const config of exchangeConfigs) {
+                const exchange = await this.createExchange(config);
+                this.exchanges.set(config.name.toLowerCase(), exchange);
+                console.log(`✅ ${config.name} connected`);
+            }
 
-          this.bybitClient = new LinearClient({
-              key: process.env.BYBIT_API_KEY,
-              secret: process.env.BYBIT_API_SECRET
-          });
-      }
+            await this.binanceClient.ping();
+            console.log('✅ Binance connected');
+            console.log('✅ All exchanges initialized');
+        } catch (error) {
+            console.error('Error initializing exchanges:', error);
+            throw error;
+        }
+    }
 
-      public async initialize(): Promise<void> {
-          this.initializeClients();
-      
-          // Test connections
-          await this.binanceClient.ping();
-          console.log('✅ Binance connected');
-      
-          // Add connection tests for other exchanges
-          console.log('✅ All exchanges initialized');
-      }
+    public async fetchPrice(exchangeName: string, symbol: string): Promise<number> {
+        try {
+            switch (exchangeName.toLowerCase()) {
+                case 'binance':
+                    const binancePrice = await this.binanceClient.prices();
+                    return parseFloat(binancePrice[symbol]) || 0;
+                default:
+                    const exchange = this.exchanges.get(exchangeName.toLowerCase());
+                    if (exchange) {
+                        const ticker = await exchange.fetchTicker(symbol);
+                        return ticker.last || 0;
+                    }
+                    throw new Error(`Exchange ${exchangeName} not supported`);
+            }
+        } catch (error) {
+            console.error(`Error fetching price for ${symbol} on ${exchangeName}:`, error);
+            return 0;
+        }
+    }
 
-      private async fetchBinancePrices(prices: Record<string, number>) {
-          const binancePrice = await this.binanceClient.prices();
-          Object.keys(binancePrice).forEach(symbol => {
-              prices[`Binance_${symbol}`] = parseFloat(binancePrice[symbol]);
-          });
-          return prices;
-      }
+    public getExchange(name: string): ccxt.Exchange | undefined {
+        return this.exchanges.get(name.toLowerCase());
+    }
 
-      private async fetchKucoinPrices(prices: Record<string, number>) {
-          const kucoinPrices = await this.kucoinClient.getAllTickers();
-          kucoinPrices.data.ticker.forEach((ticker: any) => {
-              prices[`Kucoin_${ticker.symbol}`] = parseFloat(ticker.last);
-          });
-          return prices;
-      }
+    private async createExchange(config: ExchangeConfig): Promise<ccxt.Exchange> {
+        const exchangeId = config.name.toLowerCase();
+        const exchange = new (ccxt as any)[exchangeId]({
+            apiKey: config.apiKey,
+            secret: config.apiSecret,
+            password: config.passphrase,
+            enableRateLimit: true
+        });
+        
+        await exchange.loadMarkets();
+        return exchange;
+    }
 
-      private async fetchBybitPrices(prices: Record<string, number>) {
-          const tickers = await this.bybitClient.getTickers();
-          tickers.result.forEach((ticker: any) => {
-              prices[`Bybit_${ticker.symbol}`] = parseFloat(ticker.last_price);
-          });
-          return prices;
-      }
+    private initializeClients(): void {
+        this.binanceClient = Binance({
+            apiKey: process.env.BINANCE_API_KEY,
+            apiSecret: process.env.BINANCE_API_SECRET
+        });
 
-      private detectTriangularOpportunities(prices: Record<string, number>) {
-          // Implement triangular arbitrage detection logic
-          return prices;
-      }
+        KucoinAPI.init({
+            apiKey: process.env.KUCOIN_API_KEY,
+            secretKey: process.env.KUCOIN_API_SECRET,
+            passphrase: process.env.KUCOIN_API_PASSPHRASE
+        });
+        this.kucoinClient = KucoinAPI;
 
-      public async fetchAllPrices(symbol: string): Promise<Record<string, number>> {
-          const prices: Record<string, number> = {};
-      
-          await Promise.all([
-              this.fetchBinancePrices(prices),
-              this.fetchKucoinPrices(prices),
-              this.fetchBybitPrices(prices)
-          ]);
-
-          this.detectTriangularOpportunities(prices);
-      
-          return prices;
-      }
-  }
+        this.bybitClient = new LinearClient({
+            key: process.env.BYBIT_API_KEY,
+            secret: process.env.BYBIT_API_SECRET
+        });
+    }
+}

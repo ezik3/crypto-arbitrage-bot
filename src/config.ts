@@ -8,12 +8,13 @@ export const config = {
             apiKey: process.env.BINANCE_API_KEY || '',
             apiSecret: process.env.BINANCE_API_SECRET || ''
         },
+        /*
         {
             name: 'kucoin',
             apiKey: process.env.KUCOIN_API_KEY || '',
             apiSecret: process.env.KUCOIN_API_SECRET || '',
             passphrase: process.env.KUCOIN_API_PASSPHRASE || ''
-        },
+        },*/
         {
             name: 'bybit',
             apiKey: process.env.BYBIT_API_KEY || '',

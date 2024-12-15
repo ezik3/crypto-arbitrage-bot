@@ -1,9 +1,11 @@
 import * as ccxt from 'ccxt';
 
 export interface ExchangeManagerInterface {
-    initialize(configs: ExchangeConfig[]): Promise<void>;
+    exchanges: Map<string, any>;
+    initialize(exchangeConfigs: ExchangeConfig[]): Promise<void>;
+    initializeExchanges(exchangeConfigs: ExchangeConfig[]): Promise<void>;
     fetchPrice(exchangeName: string, symbol: string): Promise<number>;
-    getExchange(name: string): ccxt.Exchange | undefined;
+    getExchange(name: string): any;
 }
 
 export interface ExchangeConfig {

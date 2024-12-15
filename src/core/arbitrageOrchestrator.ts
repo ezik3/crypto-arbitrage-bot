@@ -1,7 +1,7 @@
 import { ProfitManager } from '../profit/profitManager';
 import { MarketImpactAnalyzer } from '../market/impactAnalyzer';
 import { OrderManager } from '../orders/orderManager';
-import { ExchangeManager } from '../exchanges';
+import { ExchangeManager } from '../exchanges/exchangeManager';
 import { FlashLoanManager } from '../defi/flashLoanManager';
 import { TriangularArbitrage } from '../triangular';
 import { config } from '../config';
@@ -30,7 +30,7 @@ export class ArbitrageOrchestrator {
     public async initialize(): Promise<void> {
         try {
             console.log('Initializing arbitrage system...');
-            await this.exchangeManager.initialize(config.exchanges);
+            await this.exchangeManager.initializeExchanges(config.exchanges);
             console.log('Arbitrage system initialized successfully');
         } catch (error) {
             console.error('Failed to initialize arbitrage system:', error);
