@@ -4,6 +4,7 @@ import { OrderManager } from '../orders/orderManager';
 import { ExchangeManager } from '../exchanges/exchangeManager';
 import { FlashLoanManager } from '../defi/flashLoanManager';
 import { TriangularArbitrage } from '../triangular';
+import { PriceScanner } from './priceScanner';
 import { config } from '../config';
 
 export class ArbitrageOrchestrator {
