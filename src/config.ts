@@ -19,6 +19,17 @@ export const config = {
             apiKey: process.env.BYBIT_API_KEY || '',
             apiSecret: process.env.BYBIT_API_SECRET || ''
         },
+        {
+            name: 'kraken',
+            apiKey: process.env.KRAKEN_API_KEY || '',
+            apiSecret: process.env.KRAKEN_API_SECRET || ''
+        },
+        {
+            name: 'poloniex',  // Use exchange name, not API key name
+            apiKey: process.env.POLONIEX_API_KEY || '',
+            apiSecret: process.env.POLONIEX_API_SECRET || ''
+        }
+                
     ],    tradingPairs: [
         'BTC/USDT',
         'ETH/USDT',
