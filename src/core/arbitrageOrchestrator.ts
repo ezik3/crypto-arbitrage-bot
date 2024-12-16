@@ -6,6 +6,7 @@ import { FlashLoanManager } from '../defi/flashLoanManager';
 import { TriangularArbitrage } from '../triangular';
 import { PriceScanner } from './priceScanner';
 import { config } from '../config';
+import { TokenSniper } from '../sniping/tokenSniper';
 
 type BaseAsset = 'USDT' | 'BTC' | 'ETH';
 
@@ -20,6 +21,7 @@ export class ArbitrageOrchestrator {
     private lastOpportunity: string = '';
     private lastFlashLoan: string = '';
     private lastTriangularOpp: string = '';
+    private tokenSniper: TokenSniper;
 
     constructor() {
         this.exchangeManager = new ExchangeManager(config.exchanges);
@@ -30,6 +32,19 @@ export class ArbitrageOrchestrator {
         this.flashLoanManager = new FlashLoanManager(this.exchangeManager);
         this.triangularArbitrage = new TriangularArbitrage(this.exchangeManager);
         this.priceScanner = new PriceScanner(this.exchangeManager);
+        this.tokenSniper = new TokenSniper(
+            process.env.ETH_RPC_URL!,
+            process.env.LIVECOINWATCH_API_KEY!,
+            process.env.DAPPRADAR_API_KEY!,
+            process.env.QUILLAI_API_KEY!,
+            {
+                minLiquidity: 50000, // $50k minimum liquidity
+                maxBuyTax: 10,
+                maxSellTax: 10,
+                minHolders: 50,
+                minSecurityScore: 70
+            }
+        );
     }
 
     public async initialize(): Promise<void> {
