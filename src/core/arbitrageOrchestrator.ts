@@ -24,7 +24,7 @@ export class ArbitrageOrchestrator {
     private tokenSniper: TokenSniper;
 
     constructor() {
-        this.exchangeManager = new ExchangeManager(config.exchanges);
+        this.exchangeManager = new ExchangeManager();
         
         this.profitManager = new ProfitManager();
         this.marketAnalyzer = new MarketImpactAnalyzer();
@@ -48,14 +48,14 @@ export class ArbitrageOrchestrator {
     }
 
     public async initialize(): Promise<void> {
-        try {
-            console.log('Initializing arbitrage system...');
-            await this.exchangeManager.initializeExchanges(config.exchanges);
-            console.log('Arbitrage system initialized successfully');
-        } catch (error) {
-            console.error('Failed to initialize arbitrage system:', error);
-            throw error;
-        }
+        console.log('Initializing arbitrage orchestrator...');
+        
+        // Initialize exchanges without parameters
+        await this.exchangeManager.initializeExchanges();
+        
+        console.log('Initializing arbitrage system...');
+        await this.exchangeManager.initializeExchanges();
+        console.log('Arbitrage system initialized successfully');
     }
 
     public async startArbitrageLoop(): Promise<void> {

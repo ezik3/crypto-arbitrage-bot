@@ -24,6 +24,7 @@
     "ccxt": "^4.4.39",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.4",
+    "gate-api": "^5.60.1",
     "kucoin-node-api": "^2.1.5",
     "winston": "^3.17.0"
   }

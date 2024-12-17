@@ -40,6 +40,11 @@ export const config = {
             name: 'poloniex',
             apiKey: process.env.POLONIEX_API_KEY || '',
             apiSecret: process.env.POLONIEX_API_SECRET || ''
+        },
+        {
+            name: 'gateio',
+            apiKey: process.env.GATEIO_API_KEY || '',
+            apiSecret: process.env.GATEIO_API_SECRET || ''
         }
     ] as ExchangeConfig[],
     
@@ -159,6 +164,12 @@ export const config = {
         poloniex: [
             'BTC/USDT', 'ETH/USDT', 'XRP/USDT',
             'ETH/BTC', 'XRP/BTC'
+        ],
+        gateio: [
+            'BTC/USDT',
+            'ETH/USDT',
+            'XRP/USDT',
+            // Add more pairs as needed
         ]
     } as Record<string, string[]>,
 };

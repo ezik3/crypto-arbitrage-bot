@@ -13,4 +13,11 @@ export interface ExchangeConfig {
     apiKey: string;
     apiSecret: string;
     passphrase?: string;
+}
+
+export interface Exchange {
+    fetchBalance(params?: any): Promise<any>;
+    fetchTicker(symbol: string): Promise<any>;
+    createOrder(symbol: string, type: string, side: string, amount: number, price?: number): Promise<any>;
+    testConnection?(): Promise<boolean>;
 } 
