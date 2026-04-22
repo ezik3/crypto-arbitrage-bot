@@ -7,6 +7,9 @@ import { TriangularArbitrage } from '../triangular';
 import { PriceScanner } from './priceScanner';
 import { config } from '../config';
 import { TokenSniper } from '../sniping/tokenSniper';
+import { SniperIntegration } from '../dex/integration/sniperIntegration';
+import { DEX_CONFIGS, RPC_URLS } from '../config/dexConfig';
+import { PairManager } from '../utils/pairManager';
 
 type BaseAsset = 'USDT' | 'BTC' | 'ETH';
 
@@ -22,6 +25,8 @@ export class ArbitrageOrchestrator {
     private lastFlashLoan: string = '';
     private lastTriangularOpp: string = '';
     private tokenSniper: TokenSniper;
+    private sniperIntegration: SniperIntegration;
+    private pairManager: PairManager;
 
     constructor() {
         this.exchangeManager = new ExchangeManager();
@@ -33,18 +38,27 @@ export class ArbitrageOrchestrator {
         this.triangularArbitrage = new TriangularArbitrage(this.exchangeManager);
         this.priceScanner = new PriceScanner(this.exchangeManager);
         this.tokenSniper = new TokenSniper(
-            process.env.ETH_RPC_URL!,
-            process.env.LIVECOINWATCH_API_KEY!,
-            process.env.DAPPRADAR_API_KEY!,
-            process.env.QUILLAI_API_KEY!,
+            process.env.ETH_RPC_URL || 'https://eth-mainnet.g.alchemy.com/v2/your-api-key',
+            process.env.LIVECOINWATCH_API_KEY || '',
+            process.env.DAPPRADAR_API_KEY || '',
+            process.env.QUILLAI_API_KEY || '',
             {
-                minLiquidity: 50000, // $50k minimum liquidity
+                minLiquidity: 50000,
                 maxBuyTax: 10,
                 maxSellTax: 10,
                 minHolders: 50,
                 minSecurityScore: 70
             }
         );
+
+        // Add new integration
+        this.sniperIntegration = new SniperIntegration(
+            this.tokenSniper,
+            DEX_CONFIGS,
+            RPC_URLS
+        );
+
+        this.pairManager = PairManager.getInstance();
     }
 
     public async initialize(): Promise<void> {
@@ -56,6 +70,26 @@ export class ArbitrageOrchestrator {
         console.log('Initializing arbitrage system...');
         await this.exchangeManager.initializeExchanges();
         console.log('Arbitrage system initialized successfully');
+
+        // Initialize Gate.io with retry mechanism
+        if (this.exchangeManager.gateio) {
+            let retryCount = 0;
+            while (retryCount < config.gateioSettings.retryAttempts) {
+                try {
+                    const pairs = await this.exchangeManager.gateio.fetchTradingPairs();
+                    if (pairs.length > 0) {
+                        console.log('✅ Gate.io pairs fetched successfully');
+                        break;
+                    }
+                } catch (error) {
+                    console.log(`Retry ${retryCount + 1}/${config.gateioSettings.retryAttempts} for Gate.io initialization`);
+                    await new Promise(resolve => setTimeout(resolve, config.exchangePairs.gateio.options.reconnectDelay));
+                }
+                retryCount++;
+            }
+        } else {
+            console.log('��️ Gate.io exchange not initialized - skipping pairs fetch');
+        }
     }
 
     public async startArbitrageLoop(): Promise<void> {
@@ -63,8 +97,9 @@ export class ArbitrageOrchestrator {
         
         while (true) {
             try {
+                const allPairs = this.pairManager.getAllUniquePairs();
                 console.log('\n🔍 Starting new scan cycle...');
-                console.log(`Scanning ${config.tradingPairs.length} trading pairs across ${config.exchanges.length} exchanges...`);
+                console.log(`Scanning ${allPairs.length} trading pairs across ${config.exchanges.length} exchanges...`);
                 
                 // Track scan start time
                 const scanStartTime = Date.now();
@@ -97,6 +132,9 @@ export class ArbitrageOrchestrator {
                         process.stdout.write('✓\n');
                     }
                 }
+
+                // Add token sniping scan
+                await this.checkNewTokens();
 
                 // Scan completion summary
                 const scanDuration = ((Date.now() - scanStartTime) / 1000).toFixed(2);
@@ -155,6 +193,28 @@ export class ArbitrageOrchestrator {
             console.log(`📈 Gross Profit: ${opportunity.profit.toFixed(2)}%`);
             console.log(`⛽ Gas Cost: ${opportunity.gasCost} ETH`);
             console.log(`📊 Net Profit: ${opportunity.netProfit.toFixed(2)} USD\n`);
+        }
+    }
+
+    private async checkNewTokens(): Promise<void> {
+        try {
+            const newTokens = await this.tokenSniper.scanForNewTokens();
+            if (newTokens.length > 0) {
+                console.log('\n🔍 New Token Opportunities:');
+                newTokens.forEach(token => {
+                    console.log(`Token: ${token.address}`);
+                    console.log(`Liquidity: $${token.liquidity}`);
+                    console.log(`Security Score: ${token.securityScore}`);
+                    console.log('------------------------');
+                });
+            }
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            console.error('Error scanning for new tokens:', errorMessage);
+            // Add retry mechanism with backoff
+            const retryDelay = 5000;
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            await this.checkNewTokens();
         }
     }
 }

@@ -1,5 +1,5 @@
 import { ExchangeManager } from '../exchanges/exchangeManager';
-import { ethers } from 'ethers';
+import { providers, utils } from 'ethers';
 
 interface FlashLoanOpportunity {
     token: string;
@@ -13,11 +13,15 @@ interface FlashLoanOpportunity {
 
 export class FlashLoanManager {
     private exchangeManager: ExchangeManager;
-    private provider: ethers.Provider;
+    private provider: providers.JsonRpcProvider;
     
     constructor(exchangeManager: ExchangeManager) {
         this.exchangeManager = exchangeManager;
-        this.provider = new ethers.JsonRpcProvider(process.env.ETH_RPC_URL);
+        this.provider = new providers.JsonRpcProvider(process.env.ETH_RPC_URL);
+    }
+
+    async initialize() {
+        // Add implementation
     }
 
     async findFlashLoanOpportunities(): Promise<{opportunities: FlashLoanOpportunity[]}> {
@@ -74,7 +78,7 @@ export class FlashLoanManager {
         try {
             const gasPrice = await this.provider.getFeeData();
             const gasCost = gasEstimate * Number(gasPrice.gasPrice);
-            return parseFloat(ethers.formatEther(gasCost.toString()));
+            return parseFloat(utils.formatEther(gasCost.toString()));
         } catch (error) {
             console.error('Error calculating gas cost:', error);
             return 0;

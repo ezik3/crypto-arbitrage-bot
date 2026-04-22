@@ -3,10 +3,14 @@ import { SecurityReport } from '../types/interfaces';
 
 export class QuillAIAPI {
     private readonly baseUrl = 'https://api.quillai.network';
-    private readonly apiKey: string;
+    private readonly _apiKey: string;
 
     constructor(apiKey: string) {
-        this.apiKey = apiKey;
+        this._apiKey = apiKey;
+    }
+
+    get apiKey(): string {
+        return this._apiKey;
     }
 
     async analyzeContract(address: string): Promise<SecurityReport> {

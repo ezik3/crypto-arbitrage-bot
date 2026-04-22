@@ -1,14 +1,15 @@
-import { ethers } from 'ethers';
+import { providers, Contract } from 'ethers';
+import { QuillAIAPI } from './apis/quillai';
 import { SecurityReport } from './types/interfaces';
 import axios from 'axios';
 
 export class ContractAnalyzer {
-    private provider: ethers.Provider;
-    private quillaiApi: string;
+    private provider: providers.JsonRpcProvider;
+    private quillai: QuillAIAPI;
 
     constructor(rpcUrl: string, quillaiApiKey: string) {
-        this.provider = new ethers.JsonRpcProvider(rpcUrl);
-        this.quillaiApi = quillaiApiKey;
+        this.provider = new providers.JsonRpcProvider(rpcUrl);
+        this.quillai = new QuillAIAPI(quillaiApiKey);
     }
 
     async analyzeContract(address: string): Promise<SecurityReport> {
@@ -34,26 +35,23 @@ export class ContractAnalyzer {
 
     private async checkHoneypot(address: string): Promise<boolean> {
         const response = await axios.get(`https://api.quillai.network/check/${address}`, {
-            headers: { 'Authorization': `Bearer ${this.quillaiApi}` }
+            headers: { 'Authorization': `Bearer ${this.quillai.apiKey}` }
         });
         return response.data.isHoneypot;
     }
 
     private async checkRugPullRisk(address: string): Promise<'LOW' | 'MEDIUM' | 'HIGH'> {
         try {
-            const contract = new ethers.Contract(
+            const contract = new Contract(
                 address,
                 ['function owner() view returns (address)'],
                 this.provider
             );
             const owner = await contract.owner();
             
-            // Check if ownership is renounced
             if (owner === '0x0000000000000000000000000000000000000000') {
                 return 'LOW';
             }
-            
-            // Additional rug pull checks can be added here
             return 'MEDIUM';
         } catch {
             return 'HIGH';
@@ -63,7 +61,7 @@ export class ContractAnalyzer {
     private async checkLiquidityLock(address: string): Promise<boolean> {
         try {
             const response = await axios.get(`https://api.quillai.network/liquidity/${address}`, {
-                headers: { 'Authorization': `Bearer ${this.quillaiApi}` }
+                headers: { 'Authorization': `Bearer ${this.quillai.apiKey}` }
             });
             return response.data.liquidityLocked;
         } catch {
@@ -82,7 +80,7 @@ export class ContractAnalyzer {
 
     private async isOwnershipRenounced(address: string): Promise<boolean> {
         try {
-            const contract = new ethers.Contract(
+            const contract = new Contract(
                 address,
                 ['function owner() view returns (address)'],
                 this.provider

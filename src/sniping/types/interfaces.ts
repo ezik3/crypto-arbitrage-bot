@@ -1,13 +1,20 @@
 export interface TokenMetadata {
     address: string;
-    name: string;
-    symbol: string;
+    chain: string;
+    pair?: string;
     creationTime: number;
-    liquidityAmount: number;
+    liquidityAmount?: number;
+    source: string;
+    securityScore?: number;
+    buyTax?: number;
+    sellTax?: number;
+    liquidity?: number;
+    symbol?: string;
     marketCap?: number;
     volume24h?: number;
     holders?: number;
-    securityScore?: number;
+    name?: string;    // Added this field
+    rate?: number;
 }
 
 export interface SecurityReport {

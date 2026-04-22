@@ -1,4 +1,6 @@
 import { ExchangeManager } from './exchanges/exchangeManager';
+import { RateLimiter } from './utils/rateLimiter';
+import { config } from './config';
 
 type ValidPairs = {
     [exchange: string]: {
@@ -9,6 +11,7 @@ type ValidPairs = {
 export class TriangularArbitrage {
     private readonly minProfitPercent: number = 0.5;
     private exchangeManager: ExchangeManager;
+    private rateLimiter: RateLimiter;
 
     // Define valid pairs for each exchange
     private readonly validPairs: ValidPairs = {
@@ -64,6 +67,14 @@ export class TriangularArbitrage {
 
     constructor(exchangeManager: ExchangeManager) {
         this.exchangeManager = exchangeManager;
+        this.rateLimiter = new RateLimiter();
+        
+        // Initialize valid pairs for Gate.io
+        this.validPairs['gateio'] = {
+            'USDT': config.exchangePairs.gateio.pairs.filter((p: string) => p.endsWith('/USDT')),
+            'BTC': config.exchangePairs.gateio.pairs.filter((p: string) => p.endsWith('/BTC')),
+            'ETH': config.exchangePairs.gateio.pairs.filter((p: string) => p.endsWith('/ETH'))
+        };
     }
 
     async findTriangularOpportunities(exchange: string, baseAsset: 'USDT' | 'BTC' | 'ETH' = 'USDT'): Promise<void> {
@@ -80,6 +91,7 @@ export class TriangularArbitrage {
         
         for (const triangle of triangles) {
             try {
+                await this.rateLimiter.throttle(exchange);
                 const rates = await this.fetchTriangleRates(exchange, triangle);
                 const profit = this.calculateTriangularProfit(rates);
                 

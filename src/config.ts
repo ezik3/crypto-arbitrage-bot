@@ -151,7 +151,14 @@ export const config = {
         binance: [
             'BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'SOL/USDT', 'XRP/USDT', 'ADA/USDT', 'MATIC/USDT',
             'ETH/BTC', 'BNB/BTC', 'SOL/BTC', 'XRP/BTC', 'ADA/BTC',
-            'BNB/ETH', 'LINK/ETH', 'MATIC/ETH'
+            'BNB/ETH', 'LINK/ETH', 'MATIC/ETH',
+            'UNI/USDT', 'AAVE/USDT', 'SUSHI/USDT', 'CAKE/USDT',
+            'UNI/BTC', 'AAVE/BTC', 'SUSHI/BTC',
+            'AVAX/USDT', 'FTM/USDT', 'NEAR/USDT', 'ONE/USDT',
+            'AVAX/BTC', 'FTM/BTC', 'NEAR/BTC',
+            'AXS/USDT', 'SAND/USDT', 'MANA/USDT', 'ENJ/USDT',
+            'MATIC/USDT', 'OP/USDT', 'ARB/USDT',
+            'MATIC/BTC', 'OP/BTC', 'ARB/BTC'
         ],
         kraken: [
             'BTC/USD', 'ETH/USD', 'SOL/USD', 'XRP/USD', 'ADA/USD',
@@ -165,11 +172,30 @@ export const config = {
             'BTC/USDT', 'ETH/USDT', 'XRP/USDT',
             'ETH/BTC', 'XRP/BTC'
         ],
-        gateio: [
-            'BTC/USDT',
-            'ETH/USDT',
-            'XRP/USDT',
-            // Add more pairs as needed
-        ]
-    } as Record<string, string[]>,
+        gateio: {
+            pairs: [
+                'BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'SOL/USDT', 'XRP/USDT',
+                'ETH/BTC', 'BNB/BTC', 'SOL/BTC',
+                'BNB/ETH', 'LINK/ETH', 'UNI/ETH'
+            ],
+            options: {
+                enforceMarketValidation: false,
+                retryOnEmpty: true,
+                timeout: 30000,
+                reconnectDelay: 5000
+            }
+        }
+    } as Record<string, any>,
+
+    // Add Gate.io specific settings
+    gateioSettings: {
+        basePairs: ['USDT', 'BTC', 'ETH'],
+        minOrderSize: {
+            BTC: 0.0001,
+            ETH: 0.01,
+            USDT: 10
+        },
+        maxSlippage: 0.005,
+        retryAttempts: 3
+    }
 };

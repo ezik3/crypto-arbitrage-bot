@@ -4,19 +4,19 @@ import * as ccxt from 'ccxt';
 
 export class ExchangeManager {
     private exchanges: Map<string, Exchange>;
+    public gateio: GateIoExchange | null = null;
 
     constructor() {
         this.exchanges = new Map();
 
         // Initialize Gate.io
         if (process.env.GATEIO_API_KEY && process.env.GATEIO_API_SECRET) {
-            this.exchanges.set(
-                'gateio',
-                new GateIoExchange(
-                    process.env.GATEIO_API_KEY!,
-                    process.env.GATEIO_API_SECRET!
-                )
+            const gateioExchange = new GateIoExchange(
+                process.env.GATEIO_API_KEY!,
+                process.env.GATEIO_API_SECRET!
             );
+            this.exchanges.set('gateio', gateioExchange);
+            this.gateio = gateioExchange;
         }
 
         // Initialize all CCXT exchanges
@@ -54,6 +54,17 @@ export class ExchangeManager {
                 console.log(`✅ ${name.toUpperCase()} exchange initialized successfully`);
             } catch (error) {
                 console.error(`❌ Failed to initialize ${name.toUpperCase()} exchange:`, error);
+            }
+        }
+
+        // Ensure Gate.io is properly initialized
+        if (this.gateio && !this.exchanges.has('gateio')) {
+            try {
+                await this.gateio.testConnection();
+                this.exchanges.set('gateio', this.gateio);
+                console.log('✅ GATEIO exchange initialized successfully');
+            } catch (error) {
+                console.error('❌ Failed to initialize GATEIO exchange:', error);
             }
         }
     }

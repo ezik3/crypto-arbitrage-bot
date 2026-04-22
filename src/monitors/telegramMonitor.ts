@@ -1,72 +1,106 @@
-import { Settings } from '../config/settings';
+import { TelegramClient } from 'telegram';
+import { StringSession } from 'telegram/sessions';
 import { TokenMetadata } from '../sniping/types/interfaces';
-import axios from 'axios';
 import { ethers } from 'ethers';
+import { Settings } from '../config/settings';
+import input from 'input';
+import { NewMessage } from 'telegram/events';
+import { Api } from 'telegram';
 
 export class TelegramMonitor {
-    private apiUrl: string;
-    private lastUpdateId: number = 0;
-    private tokenPattern: RegExp = /0x[a-fA-F0-9]{40}/g; // Matches Ethereum-style addresses
+    private client: TelegramClient;
+    private tokenPattern: RegExp = /0x[a-fA-F0-9]{40}/g;
+    private isMonitoring: boolean = false;
+    private stringSession: StringSession;
 
     constructor() {
-        if (!Settings.telegram.apiId || !Settings.telegram.apiHash) {
+        console.log('📱 Initializing Telegram Monitor...');
+        
+        const apiId = parseInt(Settings.telegram.apiId || '0');
+        const apiHash = Settings.telegram.apiHash;
+        
+        if (!apiId || !apiHash) {
+            console.error('❌ Missing Telegram credentials:', {
+                apiId: !!apiId,
+                apiHash: !!apiHash
+            });
             throw new Error('Telegram API credentials not configured');
         }
-        this.apiUrl = `https://api.telegram.org/bot${Settings.telegram.apiId}:${Settings.telegram.apiHash}`;
+
+        console.log('✅ Telegram credentials found');
+        console.log('📋 Channels to monitor:', Settings.telegram.channels);
+
+        this.stringSession = new StringSession('');
+        this.client = new TelegramClient(this.stringSession, apiId, apiHash, {
+            connectionRetries: 5,
+            useWSS: true,
+            baseLogger: console
+        });
     }
 
     async startMonitoring(callback: (token: TokenMetadata) => Promise<void>) {
-        console.log('🔄 Starting Telegram monitor...');
-        
-        while (true) {
-            try {
-                await this.pollMessages(callback);
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Poll every second
-            } catch (error) {
-                console.error('Error in Telegram monitoring:', error);
-                await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5s on error
-            }
+        if (this.isMonitoring) {
+            console.log('⚠️ Monitor already running');
+            return;
         }
-    }
-
-    private async pollMessages(callback: (token: TokenMetadata) => Promise<void>) {
-        const updates = await this.getUpdates();
         
-        for (const update of updates) {
-            if (update.message?.text) {
-                const addresses = this.extractTokenAddresses(update.message.text);
-                
-                for (const address of addresses) {
-                    if (ethers.isAddress(address)) {
-                        const metadata: TokenMetadata = {
-                            address: address,
-                            chain: this.detectChain(update.message.text),
-                            creationTime: Date.now(),
-                            liquidityAmount: 0,
-                            source: 'telegram',
-                            channelId: update.message.chat.id.toString()
-                        };
-
-                        await callback(metadata);
-                    }
-                }
-            }
-            this.lastUpdateId = update.update_id + 1;
-        }
-    }
-
-    private async getUpdates() {
         try {
-            const response = await axios.get(`${this.apiUrl}/getUpdates`, {
-                params: {
-                    offset: this.lastUpdateId,
-                    allowed_updates: ['message']
+            console.log('🔄 Starting Telegram monitor...');
+            
+            await this.client.connect();
+            console.log('✅ Connected to Telegram');
+
+            if (!await this.client.isUserAuthorized()) {
+                console.log('🔑 Starting authentication...');
+                const phone = await input.text('Enter your phone number: ');
+                const code = await this.client.sendCode({
+                    apiId: parseInt(Settings.telegram.apiId || '0'),
+                    apiHash: Settings.telegram.apiHash || '',
+                }, phone);
+                
+                const userCode = await input.text('Enter the code you received: ');
+                await this.client.signIn({
+                    phoneNumber: phone,
+                    phoneCodeHash: code.phoneCodeHash,
+                    phoneCode: userCode,
+                });
+                console.log('✅ Authentication successful');
+            }
+
+            this.isMonitoring = true;
+            console.log('🎯 Starting channel monitoring...');
+
+            for (const channelId of Settings.telegram.channels) {
+                try {
+                    console.log(`🔍 Attempting to monitor channel: ${channelId}`);
+                    const channel = await this.client.getEntity(channelId);
+                    console.log(`✅ Successfully connected to channel: ${channelId}`);
+
+                    this.client.addEventHandler(async (event: NewMessage.Event) => {
+                        if (event.message?.message) {
+                            const addresses = this.extractTokenAddresses(event.message.message);
+                            for (const address of addresses) {
+                                if (ethers.isAddress(address)) {
+                                    await callback({
+                                        address,
+                                        chain: this.detectChain(event.message.message),
+                                        creationTime: Date.now(),
+                                        liquidityAmount: 0,
+                                        source: 'telegram',
+                                        channelId: channelId
+                                    });
+                                }
+                            }
+                        }
+                    }, new NewMessage({}));
+                } catch (error) {
+                    console.error(`❌ Failed to monitor channel ${channelId}:`, error);
                 }
-            });
-            return response.data.result || [];
+            }
         } catch (error) {
-            console.error('Failed to get Telegram updates:', error);
-            return [];
+            console.error('❌ Failed to connect to Telegram:', error);
+            this.isMonitoring = false;
+            throw error;
         }
     }
 
@@ -82,14 +116,10 @@ export class TelegramMonitor {
         return 'unknown';
     }
 
-    async testConnection(): Promise<boolean> {
-        try {
-            const response = await axios.get(`${this.apiUrl}/getMe`);
-            console.log('✅ Telegram monitor connected successfully');
-            return true;
-        } catch (error) {
-            console.error('❌ Failed to connect to Telegram:', error);
-            return false;
+    async stop() {
+        if (this.client) {
+            await this.client.disconnect();
         }
+        this.isMonitoring = false;
     }
 }

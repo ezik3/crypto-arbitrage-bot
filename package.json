@@ -23,9 +23,11 @@
     "bybit-api": "^3.10.27",
     "ccxt": "^4.4.39",
     "dotenv": "^16.4.7",
-    "ethers": "^6.13.4",
+    "ethers": "^5.7.2",
     "gate-api": "^5.60.1",
+    "input": "^1.0.1",
     "kucoin-node-api": "^2.1.5",
+    "telegram": "^2.26.8",
     "winston": "^3.17.0"
   }
 }

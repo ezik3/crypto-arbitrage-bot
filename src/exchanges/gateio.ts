@@ -1,13 +1,42 @@
 import { ApiClient, SpotApi } from 'gate-api';
 import { Exchange } from './types';
+import { config } from '../config';
 
 export class GateIoExchange implements Exchange {
     private client: SpotApi;
+    private pairs: string[];
 
     constructor(apiKey: string, apiSecret: string) {
         const client = new ApiClient();
         client.setApiKeySecret(apiKey, apiSecret);
         this.client = new SpotApi(client);
+        this.pairs = config.exchangePairs.gateio.pairs;
+    }
+
+    async fetchTradingPairs(): Promise<string[]> {
+        try {
+            const response = await this.client.listCurrencyPairs();
+            let availablePairs = response.body;
+            
+            if (!availablePairs || availablePairs.length === 0) {
+                console.log('⚠️ No pairs returned from Gate.io API, using configured pairs');
+                return this.pairs;
+            }
+            
+            const validPairs = this.pairs.filter(pair => 
+                availablePairs.some((ap: any) => ap.id === pair.replace('/', '_'))
+            );
+
+            if (validPairs.length === 0) {
+                console.log('⚠️ No valid pairs found, using configured pairs');
+                return this.pairs;
+            }
+
+            return validPairs;
+        } catch (error) {
+            console.error('Error fetching Gate.io pairs:', error);
+            return this.pairs;
+        }
     }
 
     async fetchTicker(symbol: string): Promise<any> {
@@ -86,3 +115,12 @@ export class GateIoExchange implements Exchange {
         }
     }
 }
+
+// Update pair format for Gate.io
+const formatGateIoPair = (pair: string) => {
+    return pair.replace('/', '_').toUpperCase();
+};
+
+// Update the currency pair format
+const formatPair = (pair: string) => pair.replace('/', '_');
+

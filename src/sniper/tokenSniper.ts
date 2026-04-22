@@ -8,6 +8,7 @@ import { Blockchain } from '../utils/blockchain';
 import { Settings } from '../config/settings';
 import { TokenMetadata, SecurityReport } from './types/interfaces';
 import { ExchangeManager } from '../exchanges/exchangeManager';
+import { DappRadarAPI } from './apis/dappRadar';
 
 export class TokenSniper {
     private dexMonitor: DexMonitor;
@@ -17,6 +18,7 @@ export class TokenSniper {
     private validator: TokenValidator;
     private blockchain: Blockchain;
     private exchangeManager: ExchangeManager;
+    private dappRadar: DappRadarAPI;
 
     constructor(
         privateKey: string,
@@ -29,6 +31,7 @@ export class TokenSniper {
         this.entryStrategy = new EntryStrategy(privateKey, Settings.chains.bsc.rpc);
         this.profitStrategy = new ProfitStrategy(exchangeManager);
         this.validator = new TokenValidator(this.blockchain.getProvider('bsc')!);
+        this.dappRadar = new DappRadarAPI();
     }
 
     async start() {

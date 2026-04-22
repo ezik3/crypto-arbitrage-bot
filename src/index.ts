@@ -14,7 +14,7 @@ async function main() {
     dotenv.config();
 
     // Initialize APIs
-    const dappRadar = new DappRadarAPI(process.env.DAPPRADAR_API_KEY!);
+    const dappRadar = new DappRadarAPI(process.env.DAPPRADAR_API_KEY);
     const liveCoinWatch = new LiveCoinWatchAPI(process.env.LIVECOINWATCH_API_KEY!);
     // Temporarily comment out QuillAI until you have the API key
     // const quillai = new QuillAIAPI(process.env.QUILLAI_API_KEY!);

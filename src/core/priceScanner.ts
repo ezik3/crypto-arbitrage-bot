@@ -1,5 +1,7 @@
 import { ExchangeManager } from '../exchanges/exchangeManager';
 import { config } from '../config';
+import { RateLimiter } from '../utils/rateLimiter';
+import { PairValidator } from '../utils/pairValidator';
 
 interface PriceOpportunity {
     pair: string;
@@ -11,7 +13,13 @@ interface PriceOpportunity {
 }
 
 export class PriceScanner {
-    constructor(private exchangeManager: ExchangeManager) {}
+    private rateLimiter: RateLimiter;
+    private pairValidator: PairValidator;
+
+    constructor(private exchangeManager: ExchangeManager) {
+        this.rateLimiter = new RateLimiter();
+        this.pairValidator = new PairValidator(exchangeManager);
+    }
 
     public async initialize(): Promise<void> {
         console.log('Initializing price scanner...');
@@ -21,17 +29,34 @@ export class PriceScanner {
         const opportunities: PriceOpportunity[] = [];
         
         for (const exchange of config.exchanges) {
-            const pairs = (config.exchangePairs as Record<string, string[]>)[exchange.name] || [];
-            console.log(`Scanning ${exchange.name} for ${pairs.length} pairs...`);
+            let pairs: string[] = [];
+            if (exchange.name === 'gateio') {
+                pairs = (config.exchangePairs.gateio as { pairs: string[] }).pairs;
+            } else {
+                pairs = (config.exchangePairs as Record<string, string[]>)[exchange.name] || [];
+            }
             
-            for (const pair of pairs) {
+            // Validate pairs first
+            const validPairs = await this.pairValidator.validatePairsForExchange(exchange.name, pairs);
+            console.log(`Scanning ${exchange.name} for ${validPairs.length} validated pairs...`);
+            
+            for (const pair of validPairs) {
                 try {
+                    await this.rateLimiter.throttle(exchange.name);
                     const price = await this.exchangeManager.fetchPrice(exchange.name, pair);
                     if (price > 0) {
                         // Check for arbitrage with other exchanges
                         for (const otherExchange of config.exchanges) {
-                            if (otherExchange.name !== exchange.name && 
-                                (config.exchangePairs as Record<string, string[]>)[otherExchange.name]?.includes(pair)) {
+                            if (otherExchange.name === exchange.name) continue;
+
+                            let otherPairs: string[] = [];
+                            if (otherExchange.name === 'gateio') {
+                                otherPairs = (config.exchangePairs.gateio as { pairs: string[] }).pairs;
+                            } else {
+                                otherPairs = (config.exchangePairs as Record<string, string[]>)[otherExchange.name] || [];
+                            }
+
+                            if (otherPairs.includes(pair)) {
                                 const otherPrice = await this.exchangeManager.fetchPrice(otherExchange.name, pair);
                                 if (otherPrice > 0) {
                                     const profit = ((otherPrice - price) / price) * 100;

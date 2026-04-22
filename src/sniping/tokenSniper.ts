@@ -1,13 +1,13 @@
-import { ethers } from 'ethers';
+import { providers, Contract } from 'ethers';
 import { LiveCoinWatchAPI } from './apis/liveCoinWatch';
 import { DappRadarAPI } from './apis/dappRadar';
 import { QuillAIAPI } from './apis/quillai';
 import { ContractAnalyzer } from './contractAnalyzer';
-import { TokenMetadata, SecurityReport, SnipingConfig } from './types/interfaces';
+import { TokenMetadata, SecurityReport, SnipingConfig } from '../sniping/types/interfaces';
 import { ProfitManager } from '../profit/profitManager';
 
 export class TokenSniper {
-    private provider: ethers.Provider;
+    private provider: providers.JsonRpcProvider;
     private liveCoinWatch: LiveCoinWatchAPI;
     private dappRadar: DappRadarAPI;
     private quillai: QuillAIAPI;
@@ -22,9 +22,9 @@ export class TokenSniper {
         quillaiApiKey: string,
         config: SnipingConfig
     ) {
-        this.provider = new ethers.JsonRpcProvider(rpcUrl);
+        this.provider = new providers.JsonRpcProvider(rpcUrl);
         this.liveCoinWatch = new LiveCoinWatchAPI(liveCoinWatchApiKey);
-        this.dappRadar = new DappRadarAPI(dappRadarApiKey);
+        this.dappRadar = new DappRadarAPI();
         this.quillai = new QuillAIAPI(quillaiApiKey);
         this.contractAnalyzer = new ContractAnalyzer(rpcUrl, quillaiApiKey);
         this.profitManager = new ProfitManager();
@@ -46,29 +46,24 @@ export class TokenSniper {
         }, 2000); // Check every 2 seconds
     }
 
-    private async analyzeToken(token: TokenMetadata) {
+    public async analyzeToken(token: TokenMetadata): Promise<void> {
         try {
-            // Get security analysis
             const security = await this.quillai.analyzeContract(token.address);
-            
-            // Get additional metrics
             const metrics = await this.quillai.getTokenMetrics(token.address);
             
-            // Check if token meets our criteria
             if (this.isTokenSafe(security, metrics) && this.meetsVolumeCriteria(token)) {
-                console.log(`\n🎯 Found potential token: ${token.symbol}`);
-                console.log(`📊 Market Cap: $${token.marketCap?.toLocaleString()}`);
-                console.log(`💧 Liquidity: $${token.liquidityAmount?.toLocaleString()}`);
-                console.log(`📈 24h Volume: $${token.volume24h?.toLocaleString()}`);
+                console.log(`\n🎯 Found potential token: ${token.symbol || token.address}`);
+                console.log(`📊 Market Cap: $${token.marketCap?.toLocaleString() || 'Unknown'}`);
+                console.log(`💧 Liquidity: $${token.liquidityAmount?.toLocaleString() || 'Unknown'}`);
+                console.log(`📈 24h Volume: $${token.volume24h?.toLocaleString() || 'Unknown'}`);
                 console.log(`🔒 Security Score: ${security.score}`);
                 
-                // Execute buy if conditions are met
                 if (this.shouldBuy(token, security, metrics)) {
                     await this.executeBuy(token);
                 }
             }
         } catch (error) {
-            console.error(`Error analyzing token ${token.address}:`, error);
+            console.error('Error analyzing token:', error);
         }
     }
 
@@ -85,18 +80,24 @@ export class TokenSniper {
     }
 
     private async listenToNewPairs() {
-        const uniswapV2Factory = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'; // Uniswap V2 Factory
-        const factory = new ethers.Contract(
+        const uniswapV2Factory = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
+        const factory = new Contract(
             uniswapV2Factory,
             ['event PairCreated(address indexed token0, address indexed token1, address pair, uint)'],
             this.provider
         );
 
-        factory.on('PairCreated', async (token0, token1, pair) => {
-            console.log(`\n🔍 New pair detected: ${token0} - ${token1}`);
-            await this.analyzeToken({ address: token0 } as TokenMetadata);
-            await this.analyzeToken({ address: token1 } as TokenMetadata);
-        });
+        factory.on('PairCreated', 
+            async (
+                token0: string,
+                token1: string,
+                pair: string
+            ) => {
+                console.log(`\n🔍 New pair detected: ${token0} - ${token1}`);
+                await this.analyzeToken({ address: token0 } as TokenMetadata);
+                await this.analyzeToken({ address: token1 } as TokenMetadata);
+            }
+        );
     }
 
     private isTokenSafe(security: SecurityReport, metrics: any): boolean {
@@ -111,9 +112,12 @@ export class TokenSniper {
     }
 
     private meetsVolumeCriteria(token: TokenMetadata): boolean {
+        const minLiquidity = this.config.minLiquidity;
+        const minHolders = this.config.minHolders;
+        
         return (
-            token.liquidityAmount >= this.config.minLiquidity &&
-            (token.holders === undefined || token.holders >= this.config.minHolders)
+            (token.liquidityAmount ?? 0) >= minLiquidity &&
+            (token.holders === undefined || token.holders >= minHolders)
         );
     }
 
@@ -127,17 +131,39 @@ export class TokenSniper {
 
     private async executeBuy(token: TokenMetadata) {
         try {
-            console.log(`\n🚀 Executing buy for token: ${token.symbol}`);
-            // Implement your buying logic here
-            // This is where you'd interact with DEX contracts to execute the trade
-            
-            // For now, just log the intention
+            console.log(`\n Executing buy for token: ${token.symbol || token.address}`);
             console.log(`Would execute buy for ${token.address}`);
-            
-            // TODO: Implement actual buying logic with your preferred DEX
-            
         } catch (error) {
             console.error(`Error executing buy for token ${token.address}:`, error);
+        }
+    }
+
+    async scanForNewTokens(): Promise<TokenMetadata[]> {
+        try {
+            const tokens = await this.dappRadar.getNewTokens();
+            return tokens.map(token => {
+                const baseToken: TokenMetadata = {
+                    address: token.address || '',
+                    chain: 'ETH',
+                    creationTime: Date.now(),
+                    source: 'dappradar',
+                    liquidityAmount: token.liquidity,
+                    securityScore: token.securityScore,
+                    buyTax: token.buyTax,
+                    sellTax: token.sellTax,
+                    holders: token.holders,
+                    symbol: token.symbol,
+                    name: token.name,
+                    marketCap: token.marketCap,
+                    volume24h: token.volume24h,
+                    pair: token.pair,
+                    rate: token.rate
+                };
+                return baseToken;
+            });
+        } catch (error) {
+            console.error('Token scanning error:', error);
+            return [];
         }
     }
 

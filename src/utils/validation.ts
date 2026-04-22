@@ -1,11 +1,11 @@
-import { ethers } from 'ethers';
+import { providers } from 'ethers';
 import { SecurityReport } from '../sniping/types/interfaces';
 import { Settings } from '../config/settings';
 
 export class TokenValidator {
-    private provider: ethers.Provider;
+    private provider: providers.Provider;
 
-    constructor(provider: ethers.Provider) {
+    constructor(provider: providers.Provider) {
         this.provider = provider;
     }
 
@@ -36,15 +36,12 @@ export class TokenValidator {
             });
 
             return {
-                address,
-                isContract,
-                contractCode,
                 isHoneypot,
-                liquidityLocked,
                 rugPullRisk,
+                liquidityLocked,
                 contractVerified,
-                score,
-                timestamp: Date.now()
+                ownershipRenounced: false,
+                score
             };
         } catch (error) {
             console.error('Error validating token:', error);

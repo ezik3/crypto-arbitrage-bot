@@ -2,36 +2,46 @@ import { ExchangeManager } from './exchanges';
 import { config } from './config';
 import { ArbitrageOpportunity } from './types';
 import { TriangularArbitrage } from './triangular';
+import { PairValidator } from './utils/pairValidator';
+import { RateLimiter } from './utils/rateLimiter';
 
 export class ArbitrageBot {
     private exchangeManager: ExchangeManager;
     private triangularArbitrage: TriangularArbitrage;
+    private pairValidator: PairValidator;
+    private rateLimiter: RateLimiter;
 
     constructor() {
         this.exchangeManager = new ExchangeManager(config.exchanges);
         this.triangularArbitrage = new TriangularArbitrage(this.exchangeManager);
+        this.pairValidator = new PairValidator(this.exchangeManager);
+        this.rateLimiter = new RateLimiter();
     }
 
     async findArbitrageOpportunities(): Promise<ArbitrageOpportunity[]> {
         const opportunities: ArbitrageOpportunity[] = [];
 
-        for (const symbol of config.tradingPairs) {
+        const allPairs = new Set([
+            ...config.tradingPairs,
+            ...Object.values(config.exchangePairs)
+                .flatMap(pairs => Array.isArray(pairs) ? pairs : pairs.pairs || [])
+        ]);
+
+        for (const symbol of allPairs) {
             const prices = new Map<string, number>();
 
-            // Fetch prices from all exchanges
             for (const exchange of config.exchanges) {
                 try {
+                    await this.rateLimiter.throttle(exchange.name);
                     const price = await this.exchangeManager.fetchPrice(exchange.name, symbol);
-                    if (price > 0) {  // Only store valid prices
+                    if (price > 0) {
                         prices.set(exchange.name, price);
                     }
-                } catch (error: any) {
-                    // Silently skip unavailable pairs
+                } catch (error) {
                     continue;
                 }
             }
 
-            // Check for arbitrage if we have prices from at least 2 exchanges
             if (prices.size >= 2) {
                 for (const [buyExchange, buyPrice] of prices) {
                     for (const [sellExchange, sellPrice] of prices) {
@@ -39,7 +49,7 @@ export class ArbitrageBot {
 
                         const profitPercent = ((sellPrice - buyPrice) / buyPrice) * 100;
 
-                        if (profitPercent > config.minProfitPercent && profitPercent < 100) { // Add reasonable upper limit
+                        if (profitPercent > config.minProfitPercent && profitPercent < 100) {
                             opportunities.push({
                                 buyExchange,
                                 sellExchange,
@@ -61,7 +71,6 @@ export class ArbitrageBot {
         
         while (true) {
             try {
-                // Regular arbitrage opportunities
                 const opportunities = await this.findArbitrageOpportunities();
                 
                 if (opportunities.length > 0) {
@@ -71,7 +80,6 @@ export class ArbitrageBot {
                     });
                 }
 
-                // Triangular arbitrage opportunities
                 for (const exchange of config.exchanges) {
                     await this.triangularArbitrage.findTriangularOpportunities(exchange.name);
                 }
