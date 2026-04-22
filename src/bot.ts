@@ -1,4 +1,4 @@
-import { ExchangeManager } from './exchanges';
+import { ExchangeManager } from './exchanges/exchangeManager';
 import { config } from './config';
 import { ArbitrageOpportunity } from './types';
 import { TriangularArbitrage } from './triangular';
@@ -21,11 +21,14 @@ export class ArbitrageBot {
     async findArbitrageOpportunities(): Promise<ArbitrageOpportunity[]> {
         const opportunities: ArbitrageOpportunity[] = [];
 
-        const allPairs = new Set([
+        // Get all pairs as array to avoid Set iteration issues
+        const allPairsArray = [
             ...config.tradingPairs,
-            ...Object.values(config.exchangePairs)
-                .flatMap(pairs => Array.isArray(pairs) ? pairs : pairs.pairs || [])
-        ]);
+            ...Object.values(config.exchangePairs).flatMap(pairs => 
+                Array.isArray(pairs) ? pairs : pairs.pairs || []
+            )
+        ];
+        const allPairs = Array.from(new Set(allPairsArray));
 
         for (const symbol of allPairs) {
             const prices = new Map<string, number>();
@@ -43,9 +46,15 @@ export class ArbitrageBot {
             }
 
             if (prices.size >= 2) {
-                for (const [buyExchange, buyPrice] of prices) {
-                    for (const [sellExchange, sellPrice] of prices) {
-                        if (buyExchange === sellExchange) continue;
+                // Convert Map to arrays to avoid Map iteration issues
+                const priceEntries = Array.from(prices.entries());
+                
+                for (let i = 0; i < priceEntries.length; i++) {
+                    const [buyExchange, buyPrice] = priceEntries[i];
+                    
+                    for (let j = 0; j < priceEntries.length; j++) {
+                        if (i === j) continue;
+                        const [sellExchange, sellPrice] = priceEntries[j];
 
                         const profitPercent = ((sellPrice - buyPrice) / buyPrice) * 100;
 

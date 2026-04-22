@@ -6,7 +6,7 @@ export class ExchangeManager {
     private exchanges: Map<string, Exchange>;
     public gateio: GateIoExchange | null = null;
 
-    constructor() {
+    constructor(exchangeConfigs?: any[]) {
         this.exchanges = new Map();
 
         // Initialize Gate.io
@@ -20,15 +20,17 @@ export class ExchangeManager {
         }
 
         // Initialize all CCXT exchanges
-        const exchangeConfigs = [
+        const defaultExchangeConfigs = [
             { name: 'binance', className: ccxt.binance },
             { name: 'bybit', className: ccxt.bybit },
             { name: 'kucoin', className: ccxt.kucoin },
             { name: 'kraken', className: ccxt.kraken },
             { name: 'poloniex', className: ccxt.poloniex }
         ];
+        
+        const configsToUse = exchangeConfigs || defaultExchangeConfigs;
 
-        for (const config of exchangeConfigs) {
+        for (const config of configsToUse) {
             if (process.env[`${config.name.toUpperCase()}_API_KEY`]) {
                 const exchangeConfig: any = {
                     apiKey: process.env[`${config.name.toUpperCase()}_API_KEY`],
@@ -46,7 +48,8 @@ export class ExchangeManager {
     }
 
     async initializeExchanges(): Promise<void> {
-        for (const [name, exchange] of this.exchanges) {
+        const exchangeEntries = Array.from(this.exchanges.entries());
+        for (const [name, exchange] of exchangeEntries) {
             try {
                 if (exchange.testConnection) {
                     await exchange.testConnection();
@@ -78,7 +81,8 @@ export class ExchangeManager {
     }
 
     async testConnections(): Promise<void> {
-        for (const [name, exchange] of this.exchanges) {
+        const exchangeEntries = Array.from(this.exchanges.entries());
+        for (const [name, exchange] of exchangeEntries) {
             console.log(`Testing ${name} connection...`);
             if (exchange.testConnection) {
                 await exchange.testConnection();
