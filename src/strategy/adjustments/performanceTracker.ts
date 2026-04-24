@@ -7,4 +7,8 @@ export class PerformanceTracker {
             riskAdjustedReturns: this.calculateRiskAdjustedReturns()
         };
     }
+
+    calculateProfitMetrics(): any { return {}; }
+    measureExecutionEfficiency(): any { return 0; }
+    calculateRiskAdjustedReturns(): any { return 0; }
 }

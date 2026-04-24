@@ -13,4 +13,9 @@ export class RealtimeOptimizer {
             await this.sleep(this.UPDATE_INTERVAL);
         }
     }
+
+    async gatherMetrics(): Promise<any> { return {}; }
+    calculateOptimizations(metrics: any): any { return {}; }
+    async applyOptimizations(optimizations: any): Promise<void> { }
+    async sleep(ms: number): Promise<void> { return new Promise(resolve => setTimeout(resolve, ms)); }
 }

@@ -1,6 +1,6 @@
 
 import { ethers } from 'ethers';
-import { ExchangeManager } from '../exchanges';
+import { ExchangeManager } from '../exchanges/exchangeManager';
 
 export class DexRouter {
     private exchanges: ExchangeManager;
@@ -18,4 +18,7 @@ export class DexRouter {
         const routes = await this.calculateAllRoutes(tokenIn, tokenOut, maxHops);
         return this.optimizeRoutes(routes, amount);
     }
+
+    async calculateAllRoutes(tokenIn: string, tokenOut: string, maxHops: number): Promise<any> { return []; }
+    optimizeRoutes(routes: any[], amount: string): any { return routes[0] || {}; }
 }

@@ -1,0 +1,340 @@
+src/analytics/analyzer.ts(9,35): error TS2339: Property 'analyzeExecutionMetrics' does not exist on type 'PerformanceAnalyzer'.
+src/analytics/analyzer.ts(10,26): error TS2339: Property 'analyzeProfitMetrics' does not exist on type 'PerformanceAnalyzer'.
+src/analytics/analyzer.ts(11,29): error TS2339: Property 'analyzeGasUsage' does not exist on type 'PerformanceAnalyzer'.
+src/analytics/analyzer.ts(12,27): error TS2339: Property 'calculateSuccessRates' does not exist on type 'PerformanceAnalyzer'.
+src/analytics/analyzer.ts(15,21): error TS2339: Property 'generatePerformanceReport' does not exist on type 'PerformanceAnalyzer'.
+src/analytics/metrics/gasMetrics.ts(4,37): error TS2339: Property 'calculateGasMetrics' does not exist on type 'GasMetrics'.
+src/analytics/metrics/gasMetrics.ts(6,34): error TS2339: Property 'calculateAverageGas' does not exist on type 'GasMetrics'.
+src/analytics/metrics/gasMetrics.ts(7,33): error TS2339: Property 'calculateEfficiency' does not exist on type 'GasMetrics'.
+src/analytics/metrics/gasMetrics.ts(8,43): error TS2339: Property 'generateOptimizations' does not exist on type 'GasMetrics'.
+src/analytics/metrics/profitMetrics.ts(5,31): error TS2339: Property 'calculateTotal' does not exist on type 'ProfitMetrics'.
+src/analytics/metrics/profitMetrics.ts(6,33): error TS2339: Property 'calculateAverage' does not exist on type 'ProfitMetrics'.
+src/analytics/metrics/profitMetrics.ts(7,31): error TS2339: Property 'analyzeTrend' does not exist on type 'ProfitMetrics'.
+src/analytics/metrics/profitMetrics.ts(8,39): error TS2339: Property 'findBestPairs' does not exist on type 'ProfitMetrics'.
+src/arbitrageController.ts(15,38): error TS2554: Expected 1 arguments, but got 0.
+src/arbitrageController.ts(25,72): error TS2339: Property 'findOpportunity' does not exist on type 'TriangularArbitrage'.
+src/arbitrageController.ts(28,68): error TS2554: Expected 3 arguments, but got 2.
+src/arbitrageController.ts(38,64): error TS2339: Property 'tokenIn' does not exist on type '{ profitable: boolean; expectedProfit: number; }'.
+src/arbitrageController.ts(38,86): error TS2339: Property 'amount' does not exist on type '{ profitable: boolean; expectedProfit: number; }'.
+src/arbitrageController.ts(62,27): error TS2339: Property 'executeTrade' does not exist on type 'ArbitrageController'.
+src/bot.ts(1,33): error TS2307: Cannot find module './exchanges' or its corresponding type declarations.
+src/crosschain/bridges/bridgeConnector.ts(6,43): error TS2339: Property 'getBridgeContract' does not exist on type 'BridgeConnector'.
+src/crosschain/bridges/bridgeConnector.ts(8,36): error TS2339: Property 'establishConnection' does not exist on type 'BridgeConnector'.
+src/crosschain/bridges/bridgeConnector.ts(9,32): error TS2339: Property 'calculateCrossChainGas' does not exist on type 'BridgeConnector'.
+src/crosschain/bridges/bridgeConnector.ts(10,31): error TS2339: Property 'findOptimalBridgePath' does not exist on type 'BridgeConnector'.
+src/crosschain/bridges/liquidityBridge.ts(4,35): error TS2339: Property 'prepareBridgeParams' does not exist on type 'LiquidityBridge'.
+src/crosschain/bridges/liquidityBridge.ts(6,35): error TS2339: Property 'executeBridge' does not exist on type 'LiquidityBridge'.
+src/crosschain/bridges/liquidityBridge.ts(7,32): error TS2339: Property 'waitForConfirmation' does not exist on type 'LiquidityBridge'.
+src/crosschain/bridges/liquidityBridge.ts(8,26): error TS2339: Property 'trackBridgeStatus' does not exist on type 'LiquidityBridge'.
+src/crosschain/chainManager.ts(8,42): error TS2339: Property 'scanChains' does not exist on type 'ChainManager'.
+src/crosschain/chainManager.ts(10,35): error TS2339: Property 'findProfitableRoutes' does not exist on type 'ChainManager'.
+src/crosschain/chainManager.ts(11,33): error TS2339: Property 'analyzeBridgeEfficiency' does not exist on type 'ChainManager'.
+src/crosschain/chainManager.ts(12,33): error TS2339: Property 'createCrossChainPlan' does not exist on type 'ChainManager'.
+src/crosschain/opportunityFinder.ts(4,35): error TS2339: Property 'getPricesAcrossChains' does not exist on type 'CrossChainOpportunityFinder'.
+src/crosschain/opportunityFinder.ts(6,33): error TS2339: Property 'analyzePriceDiscrepancies' does not exist on type 'CrossChainOpportunityFinder'.
+src/crosschain/opportunityFinder.ts(7,33): error TS2339: Property 'calculateCrossChainProfit' does not exist on type 'CrossChainOpportunityFinder'.
+src/crosschain/opportunityFinder.ts(8,24): error TS2339: Property 'assessCrossChainRisk' does not exist on type 'CrossChainOpportunityFinder'.
+src/dashboard/components/performanceMonitor.ts(5,40): error TS2339: Property 'measureExecutionSpeed' does not exist on type 'PerformanceMonitor'.
+src/dashboard/components/performanceMonitor.ts(6,31): error TS2339: Property 'calculateSuccessRate' does not exist on type 'PerformanceMonitor'.
+src/dashboard/components/performanceMonitor.ts(7,39): error TS2339: Property 'measureGasEfficiency' does not exist on type 'PerformanceMonitor'.
+src/dashboard/components/performanceMonitor.ts(8,33): error TS2339: Property 'calculateProfitability' does not exist on type 'PerformanceMonitor'.
+src/dashboard/components/profitTracker.ts(16,21): error TS2339: Property 'calculateMetrics' does not exist on type 'ProfitTracker'.
+src/dashboard/monitor.ts(9,33): error TS2339: Property 'getProfitMetrics' does not exist on type 'DashboardMonitor'.
+src/dashboard/monitor.ts(10,29): error TS2339: Property 'getGasMetrics' does not exist on type 'DashboardMonitor'.
+src/dashboard/monitor.ts(11,38): error TS2339: Property 'getTransactionMetrics' does not exist on type 'DashboardMonitor'.
+src/dashboard/monitor.ts(12,37): error TS2339: Property 'getPerformanceMetrics' does not exist on type 'DashboardMonitor'.
+src/dashboard/monitor.ts(15,14): error TS2339: Property 'updateDashboard' does not exist on type 'DashboardMonitor'.
+src/deploy/configurator.ts(8,29): error TS2339: Property 'loadNetworkConfig' does not exist on type 'SystemConfigurator'.
+src/deploy/configurator.ts(9,20): error TS2339: Property 'setContractParameters' does not exist on type 'SystemConfigurator'.
+src/deploy/configurator.ts(10,21): error TS2339: Property 'validateConfiguration' does not exist on type 'SystemConfigurator'.
+src/deploy/deployer.ts(7,38): error TS2339: Property 'deployContracts' does not exist on type 'Deployer'.
+src/deploy/deployer.ts(8,40): error TS2339: Property 'setupConnections' does not exist on type 'Deployer'.
+src/deploy/deployer.ts(13,32): error TS2339: Property 'verifyDeployment' does not exist on type 'Deployer'.
+src/deploy/verifier.ts(5,18): error TS2339: Property 'verifyContractCode' does not exist on type 'DeploymentVerifier'.
+src/deploy/verifier.ts(6,18): error TS2339: Property 'checkContractBalances' does not exist on type 'DeploymentVerifier'.
+src/deploy/verifier.ts(7,18): error TS2339: Property 'validateConnections' does not exist on type 'DeploymentVerifier'.
+src/deploy/verifier.ts(10,21): error TS2339: Property 'generateDeploymentReport' does not exist on type 'DeploymentVerifier'.
+src/dex/pathFinder.ts(9,15): error TS7034: Variable 'paths' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/dex/pathFinder.ts(10,14): error TS2339: Property 'dfs' does not exist on type 'PathFinder'.
+src/dex/pathFinder.ts(10,51): error TS7005: Variable 'paths' implicitly has an 'any[]' type.
+src/dex/pathFinder.ts(11,16): error TS7005: Variable 'paths' implicitly has an 'any[]' type.
+src/dex/routeOptimizer.ts(6,34): error TS2339: Property 'calculateExpectedReturn' does not exist on type 'RouteOptimizer'.
+src/dex/routeOptimizer.ts(7,31): error TS2339: Property 'estimateGasCost' does not exist on type 'RouteOptimizer'.
+src/dex/router.ts(3,33): error TS2307: Cannot find module '../exchanges' or its corresponding type declarations.
+src/dex/router.ts(18,35): error TS2339: Property 'calculateAllRoutes' does not exist on type 'DexRouter'.
+src/dex/router.ts(19,21): error TS2339: Property 'optimizeRoutes' does not exist on type 'DexRouter'.
+src/error/errorClassifier.ts(10,21): error TS2339: Property 'determineErrorType' does not exist on type 'ErrorClassifier'.
+src/error/recoveryManager.ts(9,32): error TS2339: Property 'classifyError' does not exist on type 'RecoveryManager'.
+src/error/recoveryManager.ts(10,37): error TS2339: Property 'attemptRecovery' does not exist on type 'RecoveryManager'.
+src/error/recoveryManager.ts(12,21): error TS2339: Property 'executeRecoveryStrategy' does not exist on type 'RecoveryManager'.
+src/error/recoveryStrategies.ts(10,29): error TS2339: Property 'handleFundingError' does not exist on type 'RecoveryStrategies'.
+src/error/recoveryStrategies.ts(12,29): error TS2339: Property 'optimizeGasAndRetry' does not exist on type 'RecoveryStrategies'.
+src/error/recoveryStrategies.ts(14,29): error TS2339: Property 'defaultRecovery' does not exist on type 'RecoveryStrategies'.
+src/execution/engine/executionOptimizer.ts(5,26): error TS2339: Property 'calculateOptimalTiming' does not exist on type 'ExecutionOptimizer'.
+src/execution/engine/executionOptimizer.ts(6,29): error TS2339: Property 'optimizeOrderSplitting' does not exist on type 'ExecutionOptimizer'.
+src/execution/engine/executionOptimizer.ts(7,27): error TS2339: Property 'determineOptimalRoute' does not exist on type 'ExecutionOptimizer'.
+src/execution/engine/orderExecutor.ts(4,38): error TS2339: Property 'prepareExecution' does not exist on type 'OrderExecutor'.
+src/execution/engine/orderExecutor.ts(6,32): error TS2339: Property 'submitOrder' does not exist on type 'OrderExecutor'.
+src/execution/engine/orderExecutor.ts(7,32): error TS2339: Property 'validateExecution' does not exist on type 'OrderExecutor'.
+src/execution/engine/orderExecutor.ts(8,27): error TS2339: Property 'collectExecutionMetrics' does not exist on type 'OrderExecutor'.
+src/execution/executionManager.ts(8,45): error TS2339: Property 'assessMarketConditions' does not exist on type 'ExecutionManager'.
+src/execution/executionManager.ts(9,36): error TS2339: Property 'createExecutionPlan' does not exist on type 'ExecutionManager'.
+src/execution/executionManager.ts(12,35): error TS2339: Property 'executeOrders' does not exist on type 'ExecutionManager'.
+src/execution/executionManager.ts(13,31): error TS2339: Property 'trackExecutionMetrics' does not exist on type 'ExecutionManager'.
+src/execution/executionManager.ts(14,32): error TS2339: Property 'optimizeExecution' does not exist on type 'ExecutionManager'.
+src/fees/optimizer.ts(6,13): error TS2564: Property 'gasOptimizer' has no initializer and is not definitely assigned in the constructor.
+src/fees/optimizer.ts(12,49): error TS2554: Expected 1 arguments, but got 0.
+src/fees/optimizer.ts(13,29): error TS2339: Property 'calculateMaxAcceptableFee' does not exist on type 'FeeOptimizer'.
+src/fees/optimizer.ts(17,40): error TS2339: Property 'calculatePriorityFee' does not exist on type 'FeeOptimizer'.
+src/fees/tracker.ts(9,14): error TS2339: Property 'updateFeeHistory' does not exist on type 'FeeTracker'.
+src/fees/tracker.ts(10,21): error TS2339: Property 'predictNextFee' does not exist on type 'FeeTracker'.
+src/flashbots/flashbots.ts(1,41): error TS2307: Cannot find module '@flashbots/ethers-provider-bundle' or its corresponding type declarations.
+src/flashbots/flashbots.ts(5,13): error TS2564: Property 'provider' has no initializer and is not definitely assigned in the constructor.
+src/flashloan.ts(2,12): error TS2305: Module '"./config"' has no exported member 'AAVE_LENDING_POOL_ADDRESS'.
+src/flashloan.ts(2,39): error TS2305: Module '"./config"' has no exported member 'PROVIDER_URL'.
+src/flashloan.ts(3,35): error TS2307: Cannot find module './exchanges' or its corresponding type declarations.
+src/flashloan.ts(30,27): error TS1308: 'await' expressions are only allowed within async functions and at the top levels of modules.
+src/flashloan.ts(51,57): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/flashloan.ts(69,24): error TS2339: Property 'contractAddress' does not exist on type 'FlashLoanManager'.
+src/flashloan.ts(70,26): error TS2339: Property 'encodeFlashLoanCall' does not exist on type 'FlashLoanManager'.
+src/flashloan.ts(75,52): error TS2339: Property 'sendBundle' does not exist on type 'void'.
+src/flashloan/FlashLoanManager.ts(2,30): error TS2307: Cannot find module '@aave/protocol-v2' or its corresponding type declarations.
+src/integration/profitOptimizer.ts(6,13): error TS2564: Property 'profitCalculator' has no initializer and is not definitely assigned in the constructor.
+src/integration/profitOptimizer.ts(7,13): error TS2564: Property 'gasOptimizer' has no initializer and is not definitely assigned in the constructor.
+src/integration/profitOptimizer.ts(10,50): error TS2554: Expected 1 arguments, but got 0.
+src/integration/profitOptimizer.ts(15,18): error TS2339: Property 'calculateFlashLoanFee' does not exist on type 'ProfitOptimizer'.
+src/integration/routeExecutor.ts(22,38): error TS2339: Property 'findAndOptimizeRoute' does not exist on type 'RouteExecutor'.
+src/integration/routeExecutor.ts(23,21): error TS2339: Property 'executeRoute' does not exist on type 'RouteExecutor'.
+src/liquidity/aggregator.ts(3,33): error TS2307: Cannot find module '../exchanges' or its corresponding type declarations.
+src/liquidity/aggregator.ts(13,41): error TS2339: Property 'fetchDexLiquidity' does not exist on type 'LiquidityAggregator'.
+src/liquidity/aggregator.ts(14,21): error TS2339: Property 'optimizeLiquiditySplit' does not exist on type 'LiquidityAggregator'.
+src/liquidity/liquidityManager.ts(8,37): error TS2339: Property 'analyzeLiquidityDepth' does not exist on type 'LiquidityManager'.
+src/liquidity/liquidityManager.ts(10,36): error TS2339: Property 'calculateOptimalPositions' does not exist on type 'LiquidityManager'.
+src/liquidity/liquidityManager.ts(11,31): error TS2339: Property 'generateRebalancingPlan' does not exist on type 'LiquidityManager'.
+src/liquidity/liquidityManager.ts(12,29): error TS2339: Property 'executeLiquidityStrategy' does not exist on type 'LiquidityManager'.
+src/liquidity/management/depthAnalyzer.ts(5,25): error TS2339: Property 'calculateDepthMetrics' does not exist on type 'DepthAnalyzer'.
+src/liquidity/management/depthAnalyzer.ts(6,26): error TS2339: Property 'assessMarketImpact' does not exist on type 'DepthAnalyzer'.
+src/liquidity/management/depthAnalyzer.ts(7,35): error TS2339: Property 'generateRecommendations' does not exist on type 'DepthAnalyzer'.
+src/liquidity/management/poolManager.ts(4,40): error TS2339: Property 'analyzePoolMetrics' does not exist on type 'PoolManager'.
+src/liquidity/management/poolManager.ts(6,32): error TS2339: Property 'optimizePoolPosition' does not exist on type 'PoolManager'.
+src/liquidity/management/poolManager.ts(7,25): error TS2339: Property 'calculateYieldStrategy' does not exist on type 'PoolManager'.
+src/liquidity/management/poolManager.ts(8,24): error TS2339: Property 'assessPoolRisk' does not exist on type 'PoolManager'.
+src/liquidity/optimizer.ts(8,35): error TS2339: Property 'calculateOptimalSplit' does not exist on type 'LiquidityOptimizer'.
+src/liquidity/optimizer.ts(9,21): error TS2339: Property 'generateExecutionPlan' does not exist on type 'LiquidityOptimizer'.
+src/liquidity/poolManager.ts(8,34): error TS2339: Property 'fetchAllPools' does not exist on type 'PoolManager'.
+src/liquidity/poolManager.ts(9,21): error TS2339: Property 'rankPoolsByLiquidity' does not exist on type 'PoolManager'.
+src/market/impact/slippageCalculator.ts(5,36): error TS2339: Property 'computeExpectedSlippage' does not exist on type 'SlippageCalculator'.
+src/market/impact/slippageCalculator.ts(6,34): error TS2339: Property 'determineTolerance' does not exist on type 'SlippageCalculator'.
+src/market/impact/slippageCalculator.ts(7,30): error TS2339: Property 'suggestMitigationStrategy' does not exist on type 'SlippageCalculator'.
+src/market/impact/volumeAnalyzer.ts(5,33): error TS2339: Property 'createVolumeProfile' does not exist on type 'VolumeAnalyzer'.
+src/market/impact/volumeAnalyzer.ts(6,29): error TS2339: Property 'assessLiquidityImpact' does not exist on type 'VolumeAnalyzer'.
+src/market/impact/volumeAnalyzer.ts(7,26): error TS2339: Property 'suggestOptimalTiming' does not exist on type 'VolumeAnalyzer'.
+src/mev/protector.ts(6,13): error TS2564: Property 'flashbots' has no initializer and is not definitely assigned in the constructor.
+src/mev/protector.ts(9,36): error TS2339: Property 'preparePrivateTransaction' does not exist on type 'MevProtector'.
+src/mev/protector.ts(10,31): error TS2339: Property 'sendBundle' does not exist on type 'FlashbotsManager'.
+src/ml/models/pricePredictor.ts(4,37): error TS2339: Property 'extractFeatures' does not exist on type 'PricePredictor'.
+src/ml/models/pricePredictor.ts(5,33): error TS2339: Property 'model' does not exist on type 'PricePredictor'.
+src/ml/models/pricePredictor.ts(10,31): error TS2339: Property 'calculateReliability' does not exist on type 'PricePredictor'.
+src/ml/predictor.ts(8,43): error TS2339: Property 'getHistoricalData' does not exist on type 'MLPredictor'.
+src/ml/predictor.ts(9,39): error TS2339: Property 'runPredictionModel' does not exist on type 'MLPredictor'.
+src/ml/predictor.ts(14,35): error TS2339: Property 'generateTradeAction' does not exist on type 'MLPredictor'.
+src/ml/predictors/opportunityPredictor.ts(4,39): error TS2339: Property 'getMarketData' does not exist on type 'OpportunityPredictor'.
+src/ml/predictors/opportunityPredictor.ts(5,34): error TS2339: Property 'model' does not exist on type 'OpportunityPredictor'.
+src/ml/predictors/opportunityPredictor.ts(8,33): error TS2339: Property 'rankOpportunities' does not exist on type 'OpportunityPredictor'.
+src/ml/predictors/opportunityPredictor.ts(9,26): error TS2339: Property 'predictOptimalTiming' does not exist on type 'OpportunityPredictor'.
+src/ml/predictors/opportunityPredictor.ts(10,24): error TS2339: Property 'assessRisk' does not exist on type 'OpportunityPredictor'.
+src/monitoring/alertSystem.ts(11,18): error TS2339: Property 'shouldTriggerAlert' does not exist on type 'AlertSystem'.
+src/monitoring/alertSystem.ts(12,24): error TS2339: Property 'sendAlert' does not exist on type 'AlertSystem'.
+src/monitoring/healthChecker.ts(5,33): error TS2339: Property 'checkNetworkStatus' does not exist on type 'HealthChecker'.
+src/monitoring/healthChecker.ts(6,35): error TS2339: Property 'verifyContracts' does not exist on type 'HealthChecker'.
+src/monitoring/healthChecker.ts(7,35): error TS2339: Property 'checkLiquidityLevels' does not exist on type 'HealthChecker'.
+src/monitoring/healthChecker.ts(8,29): error TS2339: Property 'monitorGasPrices' does not exist on type 'HealthChecker'.
+src/monitoring/healthChecker.ts(11,21): error TS2339: Property 'generateHealthReport' does not exist on type 'HealthChecker'.
+src/monitoring/priceMonitor.ts(3,33): error TS2307: Cannot find module '../exchanges' or its corresponding type declarations.
+src/monitoring/priceMonitor.ts(12,43): error TS2339: Property 'fetchPricesAcrossExchanges' does not exist on type 'PriceMonitor'.
+src/monitoring/priceMonitor.ts(13,22): error TS2339: Property 'analyzePriceMovement' does not exist on type 'PriceMonitor'.
+src/monitors/dexMonitor.ts(7,43): error TS2724: '"/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers"' has no exported member named 'Provider'. Did you mean 'providers'?
+src/monitors/dexMonitor.ts(20,41): error TS2339: Property 'JsonRpcProvider' does not exist on type 'typeof import("/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers")'.
+src/monitors/telegramClient.ts(1,25): error TS2307: Cannot find module 'telegram-mtproto' or its corresponding type declarations.
+src/monitors/telegramMonitor.ts(6,19): error TS7016: Could not find a declaration file for module 'input'. '/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/input/dist/lib/index.js' implicitly has an 'any' type.
+src/monitors/telegramMonitor.ts(37,13): error TS2740: Type 'Console' is missing the following properties from type 'Logger': levels, isBrowser, colors, messageFormat, and 8 more.
+src/monitors/telegramMonitor.ts(62,35): error TS2339: Property 'signIn' does not exist on type 'TelegramClient'.
+src/monitors/telegramMonitor.ts(79,63): error TS2702: 'NewMessage' only refers to a type, but is being used as a namespace here.
+src/monitors/telegramMonitor.ts(83,44): error TS2339: Property 'isAddress' does not exist on type 'typeof import("/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers")'.
+src/monitors/telegramMonitor.ts(90,41): error TS2353: Object literal may only specify known properties, and 'channelId' does not exist in type 'TokenMetadata'.
+src/optimization/engine/marketImpact.ts(4,35): error TS2339: Property 'calculatePriceImpact' does not exist on type 'MarketImpactAnalyzer'.
+src/optimization/engine/marketImpact.ts(5,38): error TS2339: Property 'assessLiquidityDepth' does not exist on type 'MarketImpactAnalyzer'.
+src/optimization/engine/marketImpact.ts(9,35): error TS2339: Property 'calculateOptimalSize' does not exist on type 'MarketImpactAnalyzer'.
+src/optimization/engine/marketImpact.ts(10,29): error TS2339: Property 'assessRiskLevel' does not exist on type 'MarketImpactAnalyzer'.
+src/optimization/engine/realtime.ts(10,40): error TS2339: Property 'gatherMetrics' does not exist on type 'RealtimeOptimizer'.
+src/optimization/engine/realtime.ts(11,40): error TS2339: Property 'calculateOptimizations' does not exist on type 'RealtimeOptimizer'.
+src/optimization/engine/realtime.ts(12,24): error TS2339: Property 'applyOptimizations' does not exist on type 'RealtimeOptimizer'.
+src/optimization/engine/realtime.ts(13,24): error TS2339: Property 'sleep' does not exist on type 'RealtimeOptimizer'.
+src/optimization/engine/tradeOptimizer.ts(4,45): error TS2339: Property 'analyzeMarketConditions' does not exist on type 'TradeOptimizer'.
+src/optimization/engine/tradeOptimizer.ts(5,36): error TS2339: Property 'calculateOptimalParameters' does not exist on type 'TradeOptimizer'.
+src/optimization/engine/tradeOptimizer.ts(8,26): error TS2339: Property 'findOptimalTiming' does not exist on type 'TradeOptimizer'.
+src/optimization/engine/tradeOptimizer.ts(9,24): error TS2339: Property 'calculateOptimalSize' does not exist on type 'TradeOptimizer'.
+src/optimization/engine/tradeOptimizer.ts(10,31): error TS2339: Property 'findOptimalRoute' does not exist on type 'TradeOptimizer'.
+src/orders/execution/executionMonitor.ts(5,28): error TS2339: Property 'trackExecutionProgress' does not exist on type 'ExecutionMonitor'.
+src/orders/execution/executionMonitor.ts(6,27): error TS2339: Property 'collectPerformanceMetrics' does not exist on type 'ExecutionMonitor'.
+src/orders/execution/executionMonitor.ts(7,31): error TS2339: Property 'suggestRealTimeAdjustments' does not exist on type 'ExecutionMonitor'.
+src/orders/execution/orderSplitter.ts(5,26): error TS2339: Property 'calculateOptimalChunks' does not exist on type 'OrderSplitter'.
+src/orders/execution/orderSplitter.ts(6,26): error TS2339: Property 'determineExecutionTiming' does not exist on type 'OrderSplitter'.
+src/orders/execution/orderSplitter.ts(7,27): error TS2339: Property 'optimizeRouting' does not exist on type 'OrderSplitter'.
+src/patterns/patternAnalyzer.ts(6,38): error TS2339: Property 'getPriceHistory' does not exist on type 'PatternAnalyzer'.
+src/patterns/patternAnalyzer.ts(7,31): error TS2339: Property 'identifyPatterns' does not exist on type 'PatternAnalyzer'.
+src/patterns/patternAnalyzer.ts(11,31): error TS2339: Property 'calculatePatternReliability' does not exist on type 'PatternAnalyzer'.
+src/patterns/patternAnalyzer.ts(12,34): error TS2339: Property 'generateSignals' does not exist on type 'PatternAnalyzer'.
+src/patterns/recognition/marketPatterns.ts(5,33): error TS2339: Property 'findTrendPatterns' does not exist on type 'MarketPatternRecognition'.
+src/patterns/recognition/marketPatterns.ts(6,38): error TS2339: Property 'analyzeVolatilityPatterns' does not exist on type 'MarketPatternRecognition'.
+src/patterns/recognition/marketPatterns.ts(7,36): error TS2339: Property 'identifyCycles' does not exist on type 'MarketPatternRecognition'.
+src/patterns/recognition/marketPatterns.ts(8,35): error TS2339: Property 'generateTradeRecommendations' does not exist on type 'MarketPatternRecognition'.
+src/patterns/recognition/signalGenerator.ts(4,30): error TS2339: Property 'analyzePatterns' does not exist on type 'SignalGenerator'.
+src/patterns/recognition/signalGenerator.ts(6,31): error TS2339: Property 'findEntryPoints' does not exist on type 'SignalGenerator'.
+src/patterns/recognition/signalGenerator.ts(7,30): error TS2339: Property 'findExitPoints' does not exist on type 'SignalGenerator'.
+src/patterns/recognition/signalGenerator.ts(8,30): error TS2339: Property 'calculateSignalConfidence' does not exist on type 'SignalGenerator'.
+src/performance/cacheManager.ts(4,13): error TS2564: Property 'priceCache' has no initializer and is not definitely assigned in the constructor.
+src/performance/executionOptimizer.ts(5,41): error TS2551: Property 'optimizeTransaction' does not exist on type 'ExecutionOptimizer'. Did you mean 'optimizeTransactionBatch'?
+src/performance/executionOptimizer.ts(8,21): error TS2339: Property 'prioritizeAndSchedule' does not exist on type 'ExecutionOptimizer'.
+src/performance/optimizer.ts(8,41): error TS2339: Property 'optimizeGasUsage' does not exist on type 'PerformanceOptimizer'.
+src/performance/optimizer.ts(9,33): error TS2339: Property 'getCachedRouteData' does not exist on type 'PerformanceOptimizer'.
+src/performance/optimizer.ts(15,37): error TS2339: Property 'calculatePriority' does not exist on type 'PerformanceOptimizer'.
+src/portfolio/balancer/assetBalancer.ts(4,40): error TS2339: Property 'calculateTargetAllocations' does not exist on type 'AssetBalancer'.
+src/portfolio/balancer/assetBalancer.ts(6,26): error TS2339: Property 'generateRebalancingTrades' does not exist on type 'AssetBalancer'.
+src/portfolio/balancer/assetBalancer.ts(7,35): error TS2339: Property 'calculateNewDistribution' does not exist on type 'AssetBalancer'.
+src/portfolio/balancer/assetBalancer.ts(8,29): error TS2339: Property 'assessRebalanceRisk' does not exist on type 'AssetBalancer'.
+src/portfolio/balancer/riskBalancer.ts(5,34): error TS2339: Property 'calculateOptimalWeights' does not exist on type 'RiskBalancer'.
+src/portfolio/balancer/riskBalancer.ts(6,36): error TS2339: Property 'analyzeRiskContribution' does not exist on type 'RiskBalancer'.
+src/portfolio/balancer/riskBalancer.ts(7,40): error TS2339: Property 'calculateDiversification' does not exist on type 'RiskBalancer'.
+src/portfolio/portfolioManager.ts(8,41): error TS2339: Property 'analyzePortfolio' does not exist on type 'PortfolioManager'.
+src/portfolio/portfolioManager.ts(9,42): error TS2339: Property 'calculateOptimalDistribution' does not exist on type 'PortfolioManager'.
+src/portfolio/portfolioManager.ts(12,36): error TS2339: Property 'generateRebalanceActions' does not exist on type 'PortfolioManager'.
+src/portfolio/portfolioManager.ts(13,34): error TS2339: Property 'calculateExpectedReturn' does not exist on type 'PortfolioManager'.
+src/portfolio/portfolioManager.ts(14,31): error TS2339: Property 'assessPortfolioRisk' does not exist on type 'PortfolioManager'.
+src/positions/management/hedgeOptimizer.ts(5,28): error TS2339: Property 'developHedgeStrategy' does not exist on type 'HedgeOptimizer'.
+src/positions/management/hedgeOptimizer.ts(6,26): error TS2339: Property 'calculateOptimalRatios' does not exist on type 'HedgeOptimizer'.
+src/positions/management/hedgeOptimizer.ts(7,29): error TS2339: Property 'planHedgeExecution' does not exist on type 'HedgeOptimizer'.
+src/positions/management/riskController.ts(5,28): error TS2339: Property 'calculateExposure' does not exist on type 'RiskController'.
+src/positions/management/riskController.ts(6,26): error TS2339: Property 'enforceRiskLimits' does not exist on type 'RiskController'.
+src/positions/management/riskController.ts(7,27): error TS2339: Property 'suggestHedgingActions' does not exist on type 'RiskController'.
+src/positions/positionManager.ts(8,37): error TS2551: Property 'analyzePosition' does not exist on type 'PositionManager'. Did you mean 'managePosition'?
+src/positions/positionManager.ts(10,31): error TS2339: Property 'calculateAdjustments' does not exist on type 'PositionManager'.
+src/positions/positionManager.ts(11,27): error TS2339: Property 'determineHedgingStrategy' does not exist on type 'PositionManager'.
+src/positions/positionManager.ts(12,29): error TS2339: Property 'executePositionChanges' does not exist on type 'PositionManager'.
+src/profit/optimizer/profitCalculator.ts(5,34): error TS2339: Property 'computeExpectedProfit' does not exist on type 'ProfitCalculator'.
+src/profit/optimizer/profitCalculator.ts(6,25): error TS2339: Property 'assessProfitRisks' does not exist on type 'ProfitCalculator'.
+src/profit/optimizer/profitCalculator.ts(7,32): error TS2339: Property 'suggestOptimizations' does not exist on type 'ProfitCalculator'.
+src/profit/optimizer/strategyOptimizer.ts(5,32): error TS2339: Property 'findOptimalStrategy' does not exist on type 'StrategyOptimizer'.
+src/profit/optimizer/strategyOptimizer.ts(6,30): error TS2339: Property 'optimizeParameters' does not exist on type 'StrategyOptimizer'.
+src/profit/optimizer/strategyOptimizer.ts(7,29): error TS2339: Property 'createExecutionPlan' does not exist on type 'StrategyOptimizer'.
+src/reporting/generators/performanceReport.ts(4,36): error TS2339: Property 'gatherPerformanceMetrics' does not exist on type 'PerformanceReportGenerator'.
+src/reporting/generators/performanceReport.ts(7,34): error TS2339: Property 'analyzeExecutionSpeed' does not exist on type 'PerformanceReportGenerator'.
+src/reporting/generators/performanceReport.ts(8,31): error TS2339: Property 'calculateSuccessRate' does not exist on type 'PerformanceReportGenerator'.
+src/reporting/generators/performanceReport.ts(9,30): error TS2339: Property 'analyzeEfficiency' does not exist on type 'PerformanceReportGenerator'.
+src/reporting/generators/performanceReport.ts(10,32): error TS2339: Property 'suggestImprovements' does not exist on type 'PerformanceReportGenerator'.
+src/reporting/generators/profitReport.ts(4,35): error TS2339: Property 'fetchTrades' does not exist on type 'ProfitReportGenerator'.
+src/reporting/generators/profitReport.ts(6,31): error TS2339: Property 'calculateTotalProfit' does not exist on type 'ProfitReportGenerator'.
+src/reporting/generators/profitReport.ts(7,33): error TS2339: Property 'analyzeProfitByToken' does not exist on type 'ProfitReportGenerator'.
+src/reporting/generators/profitReport.ts(8,26): error TS2339: Property 'analyzeProfitTrends' does not exist on type 'ProfitReportGenerator'.
+src/reporting/generators/profitReport.ts(9,31): error TS2339: Property 'generateProjections' does not exist on type 'ProfitReportGenerator'.
+src/reporting/reportManager.ts(8,33): error TS2339: Property 'gatherReportData' does not exist on type 'ReportManager'.
+src/reporting/reportManager.ts(9,31): error TS2339: Property 'analyzeData' does not exist on type 'ReportManager'.
+src/reporting/reportManager.ts(12,27): error TS2339: Property 'createSummary' does not exist on type 'ReportManager'.
+src/reporting/reportManager.ts(13,27): error TS2339: Property 'generateDetails' does not exist on type 'ReportManager'.
+src/reporting/reportManager.ts(14,35): error TS2339: Property 'createRecommendations' does not exist on type 'ReportManager'.
+src/risk/analyzers/marketRiskAnalyzer.ts(4,39): error TS2339: Property 'calculateVolatility' does not exist on type 'MarketRiskAnalyzer'.
+src/risk/analyzers/marketRiskAnalyzer.ts(5,38): error TS2339: Property 'assessLiquidity' does not exist on type 'MarketRiskAnalyzer'.
+src/risk/analyzers/marketRiskAnalyzer.ts(6,34): error TS2339: Property 'calculateCorrelation' does not exist on type 'MarketRiskAnalyzer'.
+src/risk/analyzers/marketRiskAnalyzer.ts(9,29): error TS2339: Property 'calculateRiskScore' does not exist on type 'MarketRiskAnalyzer'.
+src/risk/analyzers/marketRiskAnalyzer.ts(10,31): error TS2339: Property 'identifyRiskFactors' does not exist on type 'MarketRiskAnalyzer'.
+src/risk/analyzers/marketRiskAnalyzer.ts(11,40): error TS2339: Property 'suggestMitigations' does not exist on type 'MarketRiskAnalyzer'.
+src/risk/controllers/positionController.ts(4,40): error TS2339: Property 'calculateRiskMetrics' does not exist on type 'PositionController'.
+src/risk/controllers/positionController.ts(7,32): error TS2339: Property 'evaluateAdjustment' does not exist on type 'PositionController'.
+src/risk/controllers/positionController.ts(8,34): error TS2339: Property 'calculateAdjustmentSize' does not exist on type 'PositionController'.
+src/risk/controllers/positionController.ts(9,28): error TS2339: Property 'calculateStopLoss' does not exist on type 'PositionController'.
+src/risk/controllers/positionController.ts(10,30): error TS2339: Property 'calculateTakeProfit' does not exist on type 'PositionController'.
+src/risk/riskManager.ts(9,39): error TS2339: Property 'assessMarketRisk' does not exist on type 'RiskManager'.
+src/risk/riskManager.ts(10,35): error TS2339: Property 'calculatePositionRisk' does not exist on type 'RiskManager'.
+src/risk/riskManager.ts(13,29): error TS2339: Property 'calculateTotalRisk' does not exist on type 'RiskManager'.
+src/risk/riskManager.ts(14,35): error TS2339: Property 'generateRiskMitigations' does not exist on type 'RiskManager'.
+src/risk/riskManager.ts(15,38): error TS2339: Property 'calculateMaxPosition' does not exist on type 'RiskManager'.
+src/routing/optimizer/pathOptimizer.ts(4,37): error TS2339: Property 'analyzePathEfficiency' does not exist on type 'PathOptimizer'.
+src/routing/optimizer/pathOptimizer.ts(6,31): error TS2339: Property 'findMostEfficientPath' does not exist on type 'PathOptimizer'.
+src/routing/optimizer/pathOptimizer.ts(7,36): error TS2339: Property 'rankAlternatives' does not exist on type 'PathOptimizer'.
+src/routing/optimizer/pathOptimizer.ts(8,37): error TS2339: Property 'createExecutionStrategy' does not exist on type 'PathOptimizer'.
+src/routing/optimizer/splitOptimizer.ts(5,26): error TS2339: Property 'calculateOptimalSplits' does not exist on type 'SplitOptimizer'.
+src/routing/optimizer/splitOptimizer.ts(6,26): error TS2339: Property 'optimizeExecutionTiming' does not exist on type 'SplitOptimizer'.
+src/routing/optimizer/splitOptimizer.ts(7,30): error TS2339: Property 'calculateSplitEfficiency' does not exist on type 'SplitOptimizer'.
+src/routing/smartRouter.ts(8,34): error TS2339: Property 'analyzePossiblePaths' does not exist on type 'SmartRouter'.
+src/routing/smartRouter.ts(10,29): error TS2339: Property 'calculateBestRoute' does not exist on type 'SmartRouter'.
+src/routing/smartRouter.ts(11,34): error TS2339: Property 'calculateExpectedReturn' does not exist on type 'SmartRouter'.
+src/routing/smartRouter.ts(12,35): error TS2339: Property 'optimizeGasUsage' does not exist on type 'SmartRouter'.
+src/security/guards/frontRunGuard.ts(4,35): error TS2339: Property 'createPrivateTransaction' does not exist on type 'FrontRunGuard'.
+src/security/guards/frontRunGuard.ts(5,33): error TS2339: Property 'generateCommitment' does not exist on type 'FrontRunGuard'.
+src/security/guards/frontRunGuard.ts(10,36): error TS2339: Property 'validateExecution' does not exist on type 'FrontRunGuard'.
+src/security/guards/riskAnalyzer.ts(7,32): error TS2339: Property 'calculateRiskScore' does not exist on type 'RiskAnalyzer'.
+src/security/guards/riskAnalyzer.ts(8,33): error TS2339: Property 'assessMarketRisk' does not exist on type 'RiskAnalyzer'.
+src/security/guards/riskAnalyzer.ts(12,35): error TS2339: Property 'generateRiskMitigations' does not exist on type 'RiskAnalyzer'.
+src/security/protector.ts(9,43): error TS2339: Property 'runSecurityChecks' does not exist on type 'SecurityProtector'.
+src/security/protector.ts(10,18): error TS2339: Property 'validateChecks' does not exist on type 'SecurityProtector'.
+src/security/protector.ts(11,25): error TS2339: Property 'wrapWithProtection' does not exist on type 'SecurityProtector'.
+src/simulation/mockTrial.ts(13,56): error TS2339: Property 'findOpportunities' does not exist on type 'ArbitrageOrchestrator'.
+src/simulation/mockTrial.ts(15,38): error TS7006: Parameter 'opp' implicitly has an 'any' type.
+src/sniper/tokenSniper.ts(9,47): error TS2307: Cannot find module './types/interfaces' or its corresponding type declarations.
+src/sniper/tokenSniper.ts(11,30): error TS2307: Cannot find module './apis/dappRadar' or its corresponding type declarations.
+src/sniper/tokenSniper.ts(94,33): error TS2339: Property 'maxInvestment' does not exist on type '{ minLiquidity: number; maxBuyTax: number; maxSellTax: number; minHolders: number; minSecurityScore: number; }'.
+src/strategies/entryStrategy.ts(7,30): error TS2724: '"/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers"' has no exported member named 'Provider'. Did you mean 'providers'?
+src/strategies/entryStrategy.ts(12,36): error TS2339: Property 'JsonRpcProvider' does not exist on type 'typeof import("/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers")'.
+src/strategies/entryStrategy.ts(14,33): error TS2554: Expected 2 arguments, but got 1.
+src/strategies/entryStrategy.ts(68,31): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ bsc: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; polygon: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; }'.
+src/strategies/entryStrategy.ts(122,35): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ bsc: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; polygon: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; }'.
+src/strategies/entryStrategy.ts(133,17): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ bsc: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; polygon: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; }'.
+src/strategies/entryStrategy.ts(144,33): error TS2339: Property 'parseEther' does not exist on type 'typeof import("/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers")'.
+src/strategies/profitStrategy.ts(19,13): error TS2564: Property 'initialInvestment' has no initializer and is not definitely assigned in the constructor.
+src/strategies/profitStrategy.ts(20,13): error TS2564: Property 'entryPrice' has no initializer and is not definitely assigned in the constructor.
+src/strategies/profitStrategy.ts(21,13): error TS2564: Property 'tokenAddress' has no initializer and is not definitely assigned in the constructor.
+src/strategies/profitStrategy.ts(22,13): error TS2564: Property 'chain' has no initializer and is not definitely assigned in the constructor.
+src/strategy/adjustments/parameterOptimizer.ts(4,43): error TS2339: Property 'analyzeMarketConditions' does not exist on type 'ParameterOptimizer'.
+src/strategy/adjustments/parameterOptimizer.ts(6,37): error TS2339: Property 'calculateOptimalSlippage' does not exist on type 'ParameterOptimizer'.
+src/strategy/adjustments/parameterOptimizer.ts(7,31): error TS2339: Property 'optimizeGasSettings' does not exist on type 'ParameterOptimizer'.
+src/strategy/adjustments/parameterOptimizer.ts(8,30): error TS2339: Property 'calculateOptimalSizes' does not exist on type 'ParameterOptimizer'.
+src/strategy/adjustments/performanceTracker.ts(5,33): error TS2339: Property 'calculateProfitMetrics' does not exist on type 'PerformanceTracker'.
+src/strategy/adjustments/performanceTracker.ts(6,39): error TS2339: Property 'measureExecutionEfficiency' does not exist on type 'PerformanceTracker'.
+src/strategy/adjustments/performanceTracker.ts(7,39): error TS2339: Property 'calculateRiskAdjustedReturns' does not exist on type 'PerformanceTracker'.
+src/strategy/executionStrategy.ts(6,13): error TS2564: Property 'flashbots' has no initializer and is not definitely assigned in the constructor.
+src/strategy/executionStrategy.ts(13,29): error TS2339: Property 'prepareTransactionBundle' does not exist on type 'ExecutionStrategy'.
+src/strategy/executionStrategy.ts(14,39): error TS2339: Property 'simulateExecution' does not exist on type 'ExecutionStrategy'.
+src/strategy/executionStrategy.ts(16,18): error TS2339: Property 'isExecutionSafe' does not exist on type 'ExecutionStrategy'.
+src/strategy/executionStrategy.ts(17,35): error TS2339: Property 'sendBundle' does not exist on type 'FlashbotsManager'.
+src/strategy/multiPathExecutor.ts(8,36): error TS2339: Property 'calculateOptimalSplits' does not exist on type 'MultiPathExecutor'.
+src/strategy/multiPathExecutor.ts(9,46): error TS7006: Parameter 'split' implicitly has an 'any' type.
+src/strategy/multiPathExecutor.ts(10,18): error TS2339: Property 'executePathWithAmount' does not exist on type 'MultiPathExecutor'.
+src/strategy/slippageProtector.ts(4,28): error TS2304: Cannot find name 'ethers'.
+src/strategy/strategyManager.ts(8,40): error TS2339: Property 'analyzePerformance' does not exist on type 'StrategyManager'.
+src/strategy/strategyManager.ts(9,34): error TS2339: Property 'calculateAdjustments' does not exist on type 'StrategyManager'.
+src/strategy/strategyManager.ts(12,33): error TS2339: Property 'optimizeParameters' does not exist on type 'StrategyManager'.
+src/strategy/strategyManager.ts(13,39): error TS2339: Property 'calculateExpectedImprovement' does not exist on type 'StrategyManager'.
+src/strategy/strategyManager.ts(14,34): error TS2339: Property 'generateImplementationPlan' does not exist on type 'StrategyManager'.
+src/test/pairExpansion.test.ts(7,49): error TS2554: Expected 0 arguments, but got 1.
+src/tests/arbitrage.test.ts(4,1): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/tests/arbitrage.test.ts(5,5): error TS2582: Cannot find name 'test'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/tests/arbitrage.test.ts(6,9): error TS2304: Cannot find name 'expect'.
+src/tests/integration/endToEndTest.ts(5,1): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/tests/integration/endToEndTest.ts(6,5): error TS2582: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/tests/setup.ts(3,30): error TS2307: Cannot find module 'ethereum-waffle' or its corresponding type declarations.
+src/tests/setup.ts(13,39): error TS2339: Property 'deployMockContracts' does not exist on type 'typeof TestSetup'.
+src/tests/unit/arbitrageTest.ts(2,24): error TS2307: Cannot find module 'chai' or its corresponding type declarations.
+src/tests/unit/arbitrageTest.ts(5,1): error TS2582: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/tests/unit/arbitrageTest.ts(6,5): error TS2582: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.
+src/tests/unit/arbitrageTest.ts(7,28): error TS2554: Expected 1 arguments, but got 0.
+src/tests/unit/arbitrageTest.ts(8,41): error TS2339: Property 'calculateProfit' does not exist on type 'ArbitrageController'.
+src/utils/blockchain.ts(5,43): error TS2724: '"/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers"' has no exported member named 'Provider'. Did you mean 'providers'?
+src/utils/blockchain.ts(17,41): error TS2339: Property 'JsonRpcProvider' does not exist on type 'typeof import("/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers")'.
+src/utils/blockchain.ts(32,41): error TS2737: BigInt literals are not available when targeting lower than ES2020.
+src/utils/blockchain.ts(67,25): error TS2737: BigInt literals are not available when targeting lower than ES2020.
+src/utils/blockchain.ts(94,25): error TS2737: BigInt literals are not available when targeting lower than ES2020.
+src/utils/blockchain.ts(95,23): error TS2694: Namespace '"/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers"' has no exported member 'TransactionResponse'.
+src/utils/blockchain.ts(101,30): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ bsc: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; polygon: { rpc: string; factoryAddress: string; routerAddress: string; gasLimit: number; maxGasPrice: number; }; }'.
+src/utils/blockchain.ts(122,23): error TS2694: Namespace '"/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers"' has no exported member 'TransactionReceipt'.
+src/utils/blockchain.ts(129,40): error TS2724: '"/home/runner/work/crypto-arbitrage-bot/crypto-arbitrage-bot/node_modules/ethers/lib/ethers"' has no exported member named 'Provider'. Did you mean 'providers'?
+src/utils/gasOptimizer.ts(10,21): error TS2339: Property 'optimizeGasPrice' does not exist on type 'GasOptimizer'.

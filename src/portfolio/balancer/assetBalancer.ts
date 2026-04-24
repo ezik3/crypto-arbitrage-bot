@@ -8,4 +8,9 @@ export class AssetBalancer {
             riskScore: this.assessRebalanceRisk()
         };
     }
+
+    calculateTargetAllocations(): any { return {}; }
+    generateRebalancingTrades(): any { return []; }
+    calculateNewDistribution(): any { return {}; }
+    assessRebalanceRisk(): any { return 0; }
 }

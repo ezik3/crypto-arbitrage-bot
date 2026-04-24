@@ -16,4 +16,7 @@ export class AlertSystem {
             });
         }
     }
+
+    shouldTriggerAlert(profitability: number, gasPrice: number, healthStatus: any): boolean { return false; }
+    async sendAlert(data: any): Promise<void> { }
 }

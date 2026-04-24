@@ -7,4 +7,8 @@ export class ProfitCalculator {
             optimization: this.suggestOptimizations()
         };
     }
+
+    computeExpectedProfit(): any { return 0; }
+    assessProfitRisks(): any { return {}; }
+    suggestOptimizations(): any { return []; }
 }

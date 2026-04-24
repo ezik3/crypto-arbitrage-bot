@@ -10,4 +10,9 @@ export class MarketImpactAnalyzer {
             riskLevel: this.assessRiskLevel(impact)
         };
     }
+
+    async calculatePriceImpact(trade: any): Promise<any> { return 0; }
+    async assessLiquidityDepth(trade: any): Promise<any> { return {}; }
+    calculateOptimalSize(impact: any, liquidity: any): any { return 0; }
+    assessRiskLevel(impact: any): any { return 'LOW'; }
 }

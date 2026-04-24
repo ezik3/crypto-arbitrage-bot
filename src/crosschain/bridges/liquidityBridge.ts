@@ -8,4 +8,9 @@ export class LiquidityBridge {
             status: this.trackBridgeStatus()
         };
     }
+
+    prepareBridgeParams(): any { return {}; }
+    async executeBridge(params: any): Promise<any> { return {}; }
+    waitForConfirmation(): any { return {}; }
+    trackBridgeStatus(): any { return {}; }
 }

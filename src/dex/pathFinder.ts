@@ -6,8 +6,10 @@ export class PathFinder {
         dexes: string[],
         maxHops: number
     ) {
-        const paths = []
-        this.dfs(startToken, endToken, dexes, [], paths, maxHops)
-        return paths
+        const paths: any[] = [];
+        this.dfs(startToken, endToken, dexes, [], paths, maxHops);
+        return paths;
     }
+
+    dfs(current: string, end: string, dexes: string[], path: any[], paths: any[], maxHops: number): void { }
 }

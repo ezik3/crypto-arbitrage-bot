@@ -9,4 +9,6 @@ export class ErrorClassifier {
         }
         return this.determineErrorType(error);
     }
+
+    determineErrorType(error: Error): any { return 'UNKNOWN_ERROR'; }
 }

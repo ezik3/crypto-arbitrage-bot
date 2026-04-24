@@ -9,4 +9,10 @@ export class ProfitReportGenerator {
             projections: this.generateProjections(trades)
         };
     }
+
+    async fetchTrades(timeframe: string): Promise<any> { return []; }
+    calculateTotalProfit(trades: any[]): any { return 0; }
+    analyzeProfitByToken(trades: any[]): any { return {}; }
+    analyzeProfitTrends(trades: any[]): any { return {}; }
+    generateProjections(trades: any[]): any { return {}; }
 }

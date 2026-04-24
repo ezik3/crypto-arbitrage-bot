@@ -7,4 +7,8 @@ export class RiskBalancer {
             diversificationScore: this.calculateDiversification()
         };
     }
+
+    calculateOptimalWeights(): any { return {}; }
+    analyzeRiskContribution(): any { return {}; }
+    calculateDiversification(): any { return 0; }
 }

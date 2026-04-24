@@ -22,4 +22,7 @@ export class RouteExecutor {
         const bestRoute = await this.findAndOptimizeRoute(tokenIn, tokenOut, amount);
         return this.executeRoute(bestRoute);
     }
+
+    async findAndOptimizeRoute(tokenIn: string, tokenOut: string, amount: string): Promise<any> { return {}; }
+    async executeRoute(route: any): Promise<any> { return {}; }
 }

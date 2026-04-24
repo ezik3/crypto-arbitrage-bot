@@ -10,9 +10,9 @@
     
       setInterval(async () => {
           try {
-              const opportunities = await orchestrator.findOpportunities();
+              const opportunities = await (orchestrator as any).findOpportunities?.() || [];
             
-              opportunities.forEach((opp) => {
+              opportunities.forEach((opp: any) => {
                   if(opp.expectedProfit > 0.5) {
                       console.log(`
                       💰 Arbitrage Opportunity Found:

@@ -13,4 +13,8 @@ export class Deployer {
             status: await this.verifyDeployment()
         };
     }
+
+    async deployContracts(): Promise<any> { return {}; }
+    async setupConnections(contracts: any): Promise<any> { return {}; }
+    async verifyDeployment(): Promise<any> { return {}; }
 }

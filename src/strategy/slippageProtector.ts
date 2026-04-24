@@ -1,4 +1,6 @@
 
+import { ethers } from 'ethers';
+
 export class SlippageProtector {
     calculateSlippageBuffer(amount: string, slippageTolerance: number = 0.5) {
         const baseAmount = ethers.utils.parseUnits(amount, 18);

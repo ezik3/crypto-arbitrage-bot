@@ -10,4 +10,9 @@ export class BridgeConnector {
             optimalPath: this.findOptimalBridgePath()
         };
     }
+
+    async getBridgeContract(): Promise<any> { return {}; }
+    async establishConnection(contract: any): Promise<any> { return {}; }
+    calculateCrossChainGas(): any { return {}; }
+    findOptimalBridgePath(): any { return {}; }
 }

@@ -14,4 +14,10 @@ export class ReportManager {
             recommendations: this.createRecommendations(analysis)
         };
     }
+
+    async gatherReportData(): Promise<any> { return {}; }
+    analyzeData(data: any): any { return {}; }
+    createSummary(analysis: any): any { return {}; }
+    generateDetails(analysis: any): any { return {}; }
+    createRecommendations(analysis: any): any { return []; }
 }

@@ -7,4 +7,8 @@ export class SplitOptimizer {
             efficiency: this.calculateSplitEfficiency()
         };
     }
+
+    calculateOptimalSplits(): any { return []; }
+    optimizeExecutionTiming(): any { return {}; }
+    calculateSplitEfficiency(): any { return 0; }
 }

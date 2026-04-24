@@ -1,4 +1,4 @@
-import { ExchangeManager } from './exchanges';
+import { ExchangeManager } from './exchanges/exchangeManager';
 import { config } from './config';
 import { ArbitrageOpportunity } from './types';
 import { TriangularArbitrage } from './triangular';
@@ -12,7 +12,7 @@ export class ArbitrageBot {
     private rateLimiter: RateLimiter;
 
     constructor() {
-        this.exchangeManager = new ExchangeManager(config.exchanges);
+        this.exchangeManager = new ExchangeManager();
         this.triangularArbitrage = new TriangularArbitrage(this.exchangeManager);
         this.pairValidator = new PairValidator(this.exchangeManager);
         this.rateLimiter = new RateLimiter();

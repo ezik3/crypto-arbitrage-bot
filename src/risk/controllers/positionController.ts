@@ -10,4 +10,10 @@ export class PositionController {
             takeProfit: this.calculateTakeProfit(position)
         };
     }
+
+    async calculateRiskMetrics(position: any): Promise<any> { return {}; }
+    evaluateAdjustment(riskMetrics: any): any { return false; }
+    calculateAdjustmentSize(): any { return 0; }
+    calculateStopLoss(position: any): any { return 0; }
+    calculateTakeProfit(position: any): any { return 0; }
 }

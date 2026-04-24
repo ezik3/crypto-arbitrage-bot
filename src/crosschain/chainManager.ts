@@ -12,4 +12,9 @@ export class ChainManager {
             executionPlan: this.createCrossChainPlan()
         };
     }
+
+    async scanChains(): Promise<any> { return []; }
+    findProfitableRoutes(): any { return []; }
+    analyzeBridgeEfficiency(): any { return {}; }
+    createCrossChainPlan(): any { return {}; }
 }

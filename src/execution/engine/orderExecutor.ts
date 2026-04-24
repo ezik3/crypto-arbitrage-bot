@@ -8,4 +8,9 @@ export class OrderExecutor {
             metrics: this.collectExecutionMetrics()
         };
     }
+
+    async prepareExecution(order: any): Promise<any> { return {}; }
+    async submitOrder(execution: any): Promise<any> { return {}; }
+    validateExecution(): any { return {}; }
+    collectExecutionMetrics(): any { return {}; }
 }

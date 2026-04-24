@@ -9,4 +9,9 @@ export class DeploymentVerifier {
         
         return this.generateDeploymentReport(checks);
     }
+
+    async verifyContractCode(contracts: any): Promise<any> { return {}; }
+    async checkContractBalances(): Promise<any> { return {}; }
+    async validateConnections(): Promise<any> { return {}; }
+    generateDeploymentReport(checks: any): any { return {}; }
 }

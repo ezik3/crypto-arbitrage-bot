@@ -7,4 +7,8 @@ export class OrderSplitter {
             routing: this.optimizeRouting()
         };
     }
+
+    calculateOptimalChunks(): any { return []; }
+    determineExecutionTiming(): any { return {}; }
+    optimizeRouting(): any { return {}; }
 }

@@ -14,4 +14,10 @@ export class ExecutionManager {
             optimization: this.optimizeExecution()
         };
     }
+
+    async assessMarketConditions(): Promise<any> { return {}; }
+    createExecutionPlan(strategy: any): any { return {}; }
+    async executeOrders(plan: any): Promise<any> { return {}; }
+    trackExecutionMetrics(): any { return {}; }
+    optimizeExecution(): any { return {}; }
 }

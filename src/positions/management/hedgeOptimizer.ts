@@ -7,4 +7,8 @@ export class HedgeOptimizer {
             execution: this.planHedgeExecution()
         };
     }
+
+    developHedgeStrategy(): any { return {}; }
+    calculateOptimalRatios(): any { return {}; }
+    planHedgeExecution(): any { return {}; }
 }

@@ -1,4 +1,5 @@
 
+/// <reference types="jest" />
 import { ethers } from 'ethers';
 import { TestSetup } from '../setup';
 

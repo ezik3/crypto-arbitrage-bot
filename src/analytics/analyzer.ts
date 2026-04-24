@@ -14,4 +14,10 @@ export class PerformanceAnalyzer {
 
         return this.generatePerformanceReport(metrics);
     }
+
+    async analyzeExecutionMetrics(): Promise<any> { return {}; }
+    analyzeProfitMetrics(): any { return {}; }
+    async analyzeGasUsage(): Promise<any> { return {}; }
+    calculateSuccessRates(): any { return {}; }
+    generatePerformanceReport(metrics: any): any { return {}; }
 }

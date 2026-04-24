@@ -9,4 +9,6 @@ export class GasOptimizer {
         
         return this.optimizeGasPrice(gasPrice, lastBlock.baseFeePerGas);
     }
+
+    optimizeGasPrice(gasPrice: any, baseFee: any): any { return { maxFeePerGas: gasPrice, maxPriorityFeePerGas: gasPrice }; }
 }

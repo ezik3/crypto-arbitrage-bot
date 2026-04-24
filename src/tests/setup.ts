@@ -1,16 +1,19 @@
 
 import { ethers } from 'ethers';
-import { MockProvider } from 'ethereum-waffle';
 
 export class TestSetup {
     static async initialize() {
-        const provider = new MockProvider();
-        const [wallet] = provider.getWallets();
+        const provider = new ethers.providers.JsonRpcProvider();
+        const wallet = ethers.Wallet.createRandom().connect(provider);
         
         return {
             provider,
             wallet,
             mockContracts: await this.deployMockContracts(wallet)
         };
+    }
+
+    static async deployMockContracts(wallet: any) {
+        return {};
     }
 }

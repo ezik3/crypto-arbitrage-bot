@@ -12,4 +12,9 @@ export class PatternAnalyzer {
             tradingSignals: this.generateSignals(patterns)
         };
     }
+
+    async getPriceHistory(): Promise<any> { return []; }
+    identifyPatterns(data: any): any { return []; }
+    calculatePatternReliability(patterns: any): any { return 0; }
+    generateSignals(patterns: any): any { return []; }
 }

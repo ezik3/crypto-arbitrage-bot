@@ -8,4 +8,7 @@ export class LiquidityOptimizer {
         const splitAmounts = this.calculateOptimalSplit(pools, amount);
         return this.generateExecutionPlan(splitAmounts, maxSlippage);
     }
+
+    calculateOptimalSplit(pools: any[], amount: string): any { return []; }
+    generateExecutionPlan(splitAmounts: any, maxSlippage: number): any { return {}; }
 }

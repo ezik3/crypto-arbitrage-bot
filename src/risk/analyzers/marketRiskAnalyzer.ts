@@ -11,4 +11,11 @@ export class MarketRiskAnalyzer {
             mitigationStrategies: this.suggestMitigations()
         };
     }
+
+    async calculateVolatility(): Promise<any> { return 0; }
+    async assessLiquidity(): Promise<any> { return {}; }
+    calculateCorrelation(): any { return 0; }
+    calculateRiskScore(volatility: any, liquidity: any): any { return 0; }
+    identifyRiskFactors(): any { return []; }
+    suggestMitigations(): any { return []; }
 }

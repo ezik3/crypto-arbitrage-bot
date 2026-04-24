@@ -12,4 +12,9 @@ export class LiquidityManager {
             execution: this.executeLiquidityStrategy()
         };
     }
+
+    async analyzeLiquidityDepth(): Promise<any> { return {}; }
+    calculateOptimalPositions(): any { return {}; }
+    generateRebalancingPlan(): any { return {}; }
+    executeLiquidityStrategy(): any { return {}; }
 }

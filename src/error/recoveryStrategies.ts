@@ -14,4 +14,8 @@ export class RecoveryStrategies {
                 return this.defaultRecovery(transaction, attempt);
         }
     }
+
+    async handleFundingError(transaction: any): Promise<any> { return {}; }
+    async optimizeGasAndRetry(transaction: any): Promise<any> { return {}; }
+    async defaultRecovery(transaction: any, attempt: number): Promise<any> { return {}; }
 }

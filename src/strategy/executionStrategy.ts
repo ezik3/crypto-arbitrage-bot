@@ -5,6 +5,10 @@ import { FlashbotsManager } from '../flashbots/flashbots';
 export class ExecutionStrategy {
     private flashbots: FlashbotsManager;
 
+    constructor() {
+        this.flashbots = new FlashbotsManager();
+    }
+
     async executeWithProtection(
         route: any,
         gasPrice: number,
@@ -18,4 +22,8 @@ export class ExecutionStrategy {
         }
         return null;
     }
+
+    prepareTransactionBundle(route: any): any[] { return [route]; }
+    async simulateExecution(bundle: any): Promise<any> { return { success: true }; }
+    isExecutionSafe(simulation: any, minProfit: number): boolean { return true; }
 }

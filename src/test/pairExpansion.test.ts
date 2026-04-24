@@ -4,7 +4,7 @@ import { ExchangeManager } from '../exchanges/exchangeManager';
 import { config } from '../config';
 
 async function testPairExpansion() {
-    const exchangeManager = new ExchangeManager(config.exchanges);
+    const exchangeManager = new ExchangeManager();
     const pairValidator = new PairValidator(exchangeManager);
     const pairManager = PairManager.getInstance();
 

@@ -15,4 +15,10 @@ export class RiskManager {
             maxAllowedPosition: this.calculateMaxPosition()
         };
     }
+
+    async assessMarketRisk(): Promise<any> { return {}; }
+    calculatePositionRisk(trade: any): any { return 0; }
+    calculateTotalRisk(marketRisk: any, positionRisk: any): any { return 0; }
+    generateRiskMitigations(): any { return []; }
+    calculateMaxPosition(): any { return 0; }
 }

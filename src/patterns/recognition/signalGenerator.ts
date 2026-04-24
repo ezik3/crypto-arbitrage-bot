@@ -8,4 +8,9 @@ export class SignalGenerator {
             confidence: this.calculateSignalConfidence(signals)
         };
     }
+
+    analyzePatterns(patterns: any[]): any { return []; }
+    findEntryPoints(signals: any): any { return []; }
+    findExitPoints(signals: any): any { return []; }
+    calculateSignalConfidence(signals: any): any { return 0; }
 }

@@ -8,4 +8,9 @@ export class GasMetrics {
             optimizationSuggestions: this.generateOptimizations(gasUsage)
         };
     }
+
+    async calculateGasMetrics(transactions: any[]): Promise<any> { return {}; }
+    calculateAverageGas(gasUsage: any): any { return 0; }
+    calculateEfficiency(gasUsage: any): any { return 0; }
+    generateOptimizations(gasUsage: any): any { return []; }
 }

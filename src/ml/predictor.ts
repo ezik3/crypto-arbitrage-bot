@@ -14,4 +14,8 @@ export class MLPredictor {
             suggestedAction: this.generateTradeAction(prediction)
         };
     }
+
+    async getHistoricalData(token: string): Promise<any> { return []; }
+    async runPredictionModel(data: any): Promise<any> { return { price: 0, confidence: 0 }; }
+    generateTradeAction(prediction: any): any { return 'hold'; }
 }

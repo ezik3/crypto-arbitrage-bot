@@ -15,4 +15,8 @@ export class PerformanceOptimizer {
             executionPriority: this.calculatePriority(route)
         };
     }
+
+    async optimizeGasUsage(route: any): Promise<any> { return 0; }
+    getCachedRouteData(route: any): any { return null; }
+    calculatePriority(route: any): any { return 0; }
 }

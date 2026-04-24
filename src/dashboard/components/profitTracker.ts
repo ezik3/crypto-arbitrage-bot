@@ -15,4 +15,6 @@ export class ProfitTracker {
         
         return this.calculateMetrics();
     }
+
+    calculateMetrics(): any { return {}; }
 }

@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { Settings } from '../config/settings';
 
 export class Blockchain {
-    private providers: Map<string, ethers.Provider>;
+    private providers: Map<string, ethers.providers.JsonRpcProvider>;
     private wallets: Map<string, ethers.Wallet>;
 
     constructor(privateKey: string) {
@@ -14,7 +14,7 @@ export class Blockchain {
     private initializeConnections(privateKey: string) {
         Object.entries(Settings.chains).forEach(([chain, config]) => {
             // Initialize provider
-            const provider = new ethers.JsonRpcProvider(config.rpc);
+            const provider = new ethers.providers.JsonRpcProvider(config.rpc);
             this.providers.set(chain, provider);
 
             // Initialize wallet
@@ -23,13 +23,13 @@ export class Blockchain {
         });
     }
 
-    async getGasPrice(chain: string): Promise<bigint> {
+    async getGasPrice(chain: string): Promise<ethers.BigNumber> {
         try {
             const provider = this.providers.get(chain);
             if (!provider) throw new Error(`No provider for chain: ${chain}`);
 
-            const gasPrice = await provider.getFeeData();
-            return gasPrice.gasPrice || 0n;
+            const gasPrice = await provider.getGasPrice();
+            return gasPrice;
         } catch (error) {
             console.error(`Error getting gas price for ${chain}:`, error);
             throw error;
@@ -64,8 +64,8 @@ export class Blockchain {
         chain: string,
         to: string,
         data: string,
-        value: bigint = 0n
-    ): Promise<bigint> {
+        value: ethers.BigNumberish = 0
+    ): Promise<ethers.BigNumber> {
         try {
             const provider = this.providers.get(chain);
             if (!provider) throw new Error(`No provider for chain: ${chain}`);
@@ -91,14 +91,14 @@ export class Blockchain {
         chain: string,
         to: string,
         data: string,
-        value: bigint = 0n
-    ): Promise<ethers.TransactionResponse> {
+        value: ethers.BigNumberish = 0
+    ): Promise<ethers.providers.TransactionResponse> {
         try {
             const wallet = this.wallets.get(chain);
             if (!wallet) throw new Error(`No wallet for chain: ${chain}`);
 
             const gasPrice = await this.getGasPrice(chain);
-            const gasLimit = Settings.chains[chain].gasLimit;
+            const gasLimit = (Settings.chains as any)[chain].gasLimit;
 
             const tx = await wallet.sendTransaction({
                 to,
@@ -119,14 +119,14 @@ export class Blockchain {
         chain: string,
         txHash: string,
         confirmations: number = 1
-    ): Promise<ethers.TransactionReceipt> {
+    ): Promise<ethers.providers.TransactionReceipt> {
         const provider = this.providers.get(chain);
         if (!provider) throw new Error(`No provider for chain: ${chain}`);
 
-        return await provider.waitForTransaction(txHash, confirmations);
+        return await provider.waitForTransaction(txHash, confirmations) as ethers.providers.TransactionReceipt;
     }
 
-    getProvider(chain: string): ethers.Provider | undefined {
+    getProvider(chain: string): ethers.providers.JsonRpcProvider | undefined {
         return this.providers.get(chain);
     }
 

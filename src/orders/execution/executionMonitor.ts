@@ -7,4 +7,8 @@ export class ExecutionMonitor {
             adjustments: this.suggestRealTimeAdjustments()
         };
     }
+
+    trackExecutionProgress(): any { return {}; }
+    collectPerformanceMetrics(): any { return {}; }
+    suggestRealTimeAdjustments(): any { return []; }
 }

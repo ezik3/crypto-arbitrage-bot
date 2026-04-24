@@ -14,4 +14,10 @@ export class DashboardMonitor {
         
         this.updateDashboard(data);
     }
+
+    async getProfitMetrics(): Promise<any> { return {}; }
+    async getGasMetrics(): Promise<any> { return {}; }
+    async getTransactionMetrics(): Promise<any> { return {}; }
+    async getPerformanceMetrics(): Promise<any> { return {}; }
+    updateDashboard(data: any): void { }
 }

@@ -4,14 +4,14 @@ import { TokenMetadata, SecurityReport } from '../sniping/types/interfaces';
 import { ContractAnalyzer } from '../sniping/contractAnalyzer';
 
 export class EntryStrategy {
-    private provider: ethers.Provider;
+    private provider: ethers.providers.JsonRpcProvider;
     private contractAnalyzer: ContractAnalyzer;
     private wallet: ethers.Wallet;
 
     constructor(privateKey: string, rpcUrl: string) {
-        this.provider = new ethers.JsonRpcProvider(rpcUrl);
+        this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
         this.wallet = new ethers.Wallet(privateKey, this.provider);
-        this.contractAnalyzer = new ContractAnalyzer(this.provider);
+        this.contractAnalyzer = new ContractAnalyzer(rpcUrl, '');
     }
 
     async evaluateEntry(token: TokenMetadata): Promise<boolean> {
@@ -65,7 +65,7 @@ export class EntryStrategy {
 
     private async checkLiquidity(token: TokenMetadata): Promise<number> {
         // Implement liquidity checking logic using DEX router
-        const routerAddress = Settings.chains[token.chain].routerAddress;
+        const routerAddress = (Settings.chains as any)[token.chain].routerAddress;
         const router = new ethers.Contract(
             routerAddress,
             ['function getAmountsOut(uint amountIn, address[] memory path) view returns (uint[] memory amounts)'],
@@ -119,7 +119,7 @@ export class EntryStrategy {
             console.log(`🚀 Executing entry for ${token.address}`);
             
             // Get router contract
-            const routerAddress = Settings.chains[token.chain].routerAddress;
+            const routerAddress = (Settings.chains as any)[token.chain].routerAddress;
             const router = new ethers.Contract(
                 routerAddress,
                 [
@@ -130,7 +130,7 @@ export class EntryStrategy {
 
             // Prepare swap parameters
             const path = [
-                Settings.chains[token.chain].wethAddress,
+                (Settings.chains as any)[token.chain].wethAddress,
                 token.address
             ];
             const deadline = Math.floor(Date.now() / 1000) + 300; // 5 minutes
@@ -141,7 +141,7 @@ export class EntryStrategy {
                 path,
                 this.wallet.address,
                 deadline,
-                { value: ethers.parseEther(amount.toString()) }
+                { value: ethers.utils.parseEther(amount.toString()) }
             );
 
             await tx.wait();

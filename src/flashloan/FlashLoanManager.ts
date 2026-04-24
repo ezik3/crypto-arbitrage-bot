@@ -1,9 +1,12 @@
 
-import { ILendingPool } from '@aave/protocol-v2';
 import { config } from '../config';
 
+interface ILendingPool {
+  flashLoan(receiverAddress: string, assets: string[], amounts: any[], modes: number[], onBehalfOf: string, params: string, referralCode: number): Promise<any>;
+}
+
 export class FlashLoanManager {
-    private lendingPool: ILendingPool;
+    private lendingPool!: ILendingPool;
     
     constructor() {
         this.initializeLendingPool();

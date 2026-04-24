@@ -14,4 +14,10 @@ export class StrategyManager {
             implementation: this.generateImplementationPlan()
         };
     }
+
+    async analyzePerformance(): Promise<any> { return {}; }
+    calculateAdjustments(performance: any): any { return {}; }
+    optimizeParameters(adjustments: any): any { return {}; }
+    calculateExpectedImprovement(): any { return 0; }
+    generateImplementationPlan(): any { return {}; }
 }

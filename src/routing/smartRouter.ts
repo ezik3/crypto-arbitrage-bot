@@ -12,4 +12,9 @@ export class SmartRouter {
             gasOptimization: this.optimizeGasUsage()
         };
     }
+
+    async analyzePossiblePaths(): Promise<any> { return []; }
+    calculateBestRoute(paths: any): any { return {}; }
+    calculateExpectedReturn(): any { return 0; }
+    optimizeGasUsage(): any { return {}; }
 }

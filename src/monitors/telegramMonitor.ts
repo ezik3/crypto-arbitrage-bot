@@ -3,6 +3,7 @@ import { StringSession } from 'telegram/sessions';
 import { TokenMetadata } from '../sniping/types/interfaces';
 import { ethers } from 'ethers';
 import { Settings } from '../config/settings';
+// @ts-ignore
 import input from 'input';
 import { NewMessage } from 'telegram/events';
 import { Api } from 'telegram';
@@ -34,7 +35,7 @@ export class TelegramMonitor {
         this.client = new TelegramClient(this.stringSession, apiId, apiHash, {
             connectionRetries: 5,
             useWSS: true,
-            baseLogger: console
+            baseLogger: console as any
         });
     }
 
@@ -59,7 +60,7 @@ export class TelegramMonitor {
                 }, phone);
                 
                 const userCode = await input.text('Enter the code you received: ');
-                await this.client.signIn({
+                await (this.client as any).signIn({
                     phoneNumber: phone,
                     phoneCodeHash: code.phoneCodeHash,
                     phoneCode: userCode,
@@ -76,18 +77,17 @@ export class TelegramMonitor {
                     const channel = await this.client.getEntity(channelId);
                     console.log(`✅ Successfully connected to channel: ${channelId}`);
 
-                    this.client.addEventHandler(async (event: NewMessage.Event) => {
+                    this.client.addEventHandler(async (event: any) => {
                         if (event.message?.message) {
                             const addresses = this.extractTokenAddresses(event.message.message);
                             for (const address of addresses) {
-                                if (ethers.isAddress(address)) {
+                                if (ethers.utils.isAddress(address)) {
                                     await callback({
                                         address,
                                         chain: this.detectChain(event.message.message),
                                         creationTime: Date.now(),
                                         liquidityAmount: 0,
-                                        source: 'telegram',
-                                        channelId: channelId
+                                        source: 'telegram'
                                     });
                                 }
                             }

@@ -8,4 +8,9 @@ export class PerformanceMonitor {
             profitability: this.calculateProfitability()
         };
     }
+
+    async measureExecutionSpeed(): Promise<any> { return 0; }
+    calculateSuccessRate(): any { return 0; }
+    async measureGasEfficiency(): Promise<any> { return 0; }
+    calculateProfitability(): any { return 0; }
 }

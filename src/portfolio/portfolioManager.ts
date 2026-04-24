@@ -14,4 +14,10 @@ export class PortfolioManager {
             riskMetrics: this.assessPortfolioRisk()
         };
     }
+
+    async analyzePortfolio(): Promise<any> { return {}; }
+    calculateOptimalDistribution(): any { return {}; }
+    generateRebalanceActions(): any { return []; }
+    calculateExpectedReturn(): any { return 0; }
+    assessPortfolioRisk(): any { return {}; }
 }

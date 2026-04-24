@@ -16,10 +16,10 @@ interface ExitPoint {
 export class ProfitStrategy {
     private exchangeManager: ExchangeManager;
     private strategyType: 'conservative' | 'aggressive';
-    private initialInvestment: number;
-    private entryPrice: number;
-    private tokenAddress: string;
-    private chain: string;
+    private initialInvestment: number = 0;
+    private entryPrice: number = 0;
+    private tokenAddress: string = '';
+    private chain: string = '';
 
     constructor(
         exchangeManager: ExchangeManager,

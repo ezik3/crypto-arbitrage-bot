@@ -4,7 +4,7 @@ import { TokenMetadata } from '../sniping/types/interfaces';
 import { DexScreenerAPI } from '../apis/dexScreenerApi';
 
 export class DexMonitor {
-    private providers: Map<string, ethers.Provider>;
+    private providers: Map<string, ethers.providers.JsonRpcProvider>;
     private factories: Map<string, ethers.Contract>;
     private dexScreener: DexScreenerAPI;
 
@@ -17,7 +17,7 @@ export class DexMonitor {
 
     private initializeConnections() {
         Object.entries(Settings.chains).forEach(([chain, config]) => {
-            const provider = new ethers.JsonRpcProvider(config.rpc);
+            const provider = new ethers.providers.JsonRpcProvider(config.rpc);
             this.providers.set(chain, provider);
 
             const factory = new ethers.Contract(

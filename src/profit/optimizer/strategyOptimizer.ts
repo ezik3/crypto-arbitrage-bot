@@ -7,4 +7,8 @@ export class StrategyOptimizer {
             execution: this.createExecutionPlan()
         };
     }
+
+    findOptimalStrategy(): any { return {}; }
+    optimizeParameters(): any { return {}; }
+    createExecutionPlan(): any { return {}; }
 }

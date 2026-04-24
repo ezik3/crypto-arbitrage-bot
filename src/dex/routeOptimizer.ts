@@ -9,4 +9,7 @@ export class RouteOptimizer {
 
         return optimizedRoutes.sort((a, b) => b.expectedReturn - a.expectedReturn);
     }
+
+    calculateExpectedReturn(route: any, amount: string): any { return 0; }
+    estimateGasCost(route: any): any { return 0; }
 }

@@ -7,4 +7,7 @@ export class ExecutionOptimizer {
         
         return this.prioritizeAndSchedule(optimizedBatch);
     }
+
+    async optimizeTransaction(tx: any): Promise<any> { return tx; }
+    prioritizeAndSchedule(batch: any[]): any { return batch; }
 }

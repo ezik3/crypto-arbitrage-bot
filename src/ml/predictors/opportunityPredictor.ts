@@ -1,5 +1,7 @@
 
 export class OpportunityPredictor {
+    private model: any = null;
+
     async predictArbitrageOpportunities() {
         const marketData = await this.getMarketData();
         const predictions = this.model.predictOpportunities(marketData);
@@ -10,4 +12,9 @@ export class OpportunityPredictor {
             risk: this.assessRisk(predictions)
         };
     }
+
+    async getMarketData(): Promise<any> { return {}; }
+    rankOpportunities(predictions: any): any { return []; }
+    predictOptimalTiming(predictions: any): any { return {}; }
+    assessRisk(predictions: any): any { return {}; }
 }

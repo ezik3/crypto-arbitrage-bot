@@ -7,4 +7,8 @@ export class DepthAnalyzer {
             recommendations: this.generateRecommendations()
         };
     }
+
+    calculateDepthMetrics(): any { return {}; }
+    assessMarketImpact(): any { return {}; }
+    generateRecommendations(): any { return []; }
 }

@@ -8,4 +8,9 @@ export class CrossChainOpportunityFinder {
             risk: this.assessCrossChainRisk()
         };
     }
+
+    async getPricesAcrossChains(): Promise<any> { return {}; }
+    analyzePriceDiscrepancies(): any { return []; }
+    calculateCrossChainProfit(): any { return 0; }
+    assessCrossChainRisk(): any { return {}; }
 }

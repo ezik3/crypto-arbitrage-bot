@@ -11,4 +11,8 @@ export class RecoveryManager {
         
         return this.executeRecoveryStrategy(recovery);
     }
+
+    classifyError(error: Error): any { return 'UNKNOWN'; }
+    async attemptRecovery(errorType: string, transaction: any): Promise<any> { return {}; }
+    async executeRecoveryStrategy(recovery: any): Promise<any> { return {}; }
 }

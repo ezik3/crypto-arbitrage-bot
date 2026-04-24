@@ -12,4 +12,8 @@ export class RiskAnalyzer {
             recommendations: this.generateRiskMitigations(riskScore)
         };
     }
+
+    calculateRiskScore(transaction: any): any { return 0; }
+    assessMarketRisk(conditions: any): any { return 0; }
+    generateRiskMitigations(riskScore: any): any { return []; }
 }

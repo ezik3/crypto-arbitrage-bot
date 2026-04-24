@@ -9,4 +9,7 @@ export class FeeTracker {
         this.updateFeeHistory(dex, currentFee);
         return this.predictNextFee(dex);
     }
+
+    updateFeeHistory(dex: string, fee: number): void { }
+    predictNextFee(dex: string): any { return 0; }
 }

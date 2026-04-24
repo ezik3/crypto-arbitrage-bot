@@ -7,4 +7,8 @@ export class RiskController {
             hedging: this.suggestHedgingActions()
         };
     }
+
+    calculateExposure(): any { return 0; }
+    enforceRiskLimits(): any { return {}; }
+    suggestHedgingActions(): any { return []; }
 }

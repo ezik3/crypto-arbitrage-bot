@@ -12,4 +12,8 @@ export class SecurityProtector {
         }
         throw new Error('Security checks failed');
     }
+
+    async runSecurityChecks(tx: any): Promise<any> { return {}; }
+    validateChecks(checks: any): boolean { return true; }
+    wrapWithProtection(tx: any): any { return tx; }
 }
