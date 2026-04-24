@@ -1,89 +1,95 @@
-  import { ethers } from 'ethers';
-  import { AAVE_LENDING_POOL_ADDRESS, PROVIDER_URL } from './config';
-  import { ExchangeManager } from './exchanges';
+import { ethers } from 'ethers';
+import { ExchangeManager } from './exchanges/exchangeManager';
 
-  export class FlashLoanManager {
-      private provider: ethers.providers.JsonRpcProvider;
-      private wallet: ethers.Wallet;
-      private exchangeManager: ExchangeManager;
+// Aave V2 lending pool ABI (minimal)
+const AAVE_V2_LENDING_POOL_ABI = [
+    'function flashLoan(address receiverAddress, address[] calldata assets, uint256[] calldata amounts, uint256[] calldata modes, address onBehalfOf, bytes calldata params, uint16 referralCode) external'
+];
 
-      constructor(privateKey: string) {
-          this.provider = new ethers.providers.JsonRpcProvider(PROVIDER_URL);
-          this.wallet = new ethers.Wallet(privateKey, this.provider);
-          this.exchangeManager = new ExchangeManager();
-      }
+const PROVIDER_URL = process.env.ETH_RPC_URL || '';
+const AAVE_LENDING_POOL_ADDRESS = '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9'; // Aave V2 mainnet
 
-      async executeFlashLoan(tokenAddress: string, amount: string) {
-          const gasPrice = await this.provider.getGasPrice();
-          const estimatedGas = ethers.utils.parseUnits('500000', 'wei'); // Safe estimate
-          const maxGasCost = gasPrice.mul(estimatedGas);
+export class FlashLoanManager {
+    private provider: ethers.providers.JsonRpcProvider;
+    private wallet: ethers.Wallet;
+    private exchangeManager: ExchangeManager;
+    private lendingPool: ethers.Contract;
+    private contractAddress: string = AAVE_LENDING_POOL_ADDRESS;
 
-          // Check if gas cost is within risk tolerance
-          if (!this.isWithinRiskTolerance(maxGasCost)) {
-              throw new Error('Gas cost exceeds risk tolerance');
-          }
+    constructor(privateKey: string) {
+        this.provider = new ethers.providers.JsonRpcProvider(PROVIDER_URL);
+        this.wallet = new ethers.Wallet(privateKey, this.provider);
+        this.exchangeManager = new ExchangeManager();
+        this.lendingPool = new ethers.Contract(
+            AAVE_LENDING_POOL_ADDRESS,
+            AAVE_V2_LENDING_POOL_ABI,
+            this.wallet
+        );
+    }
 
-          // Flash loan execution logic here
-      }
+    async executeFlashLoan(tokenAddress: string, amount: string) {
+        const gasPrice = await this.provider.getGasPrice();
+        const estimatedGas = ethers.BigNumber.from('500000');
+        const maxGasCost = gasPrice.mul(estimatedGas);
 
-      private isWithinRiskTolerance(gasCost: ethers.BigNumber): boolean {
-          const balance = await this.wallet.getBalance();
-          const maxRisk = balance.mul(20).div(100); // 20% risk tolerance
-          return gasCost.lte(maxRisk);
-      }
+        if (!(await this.isWithinRiskTolerance(maxGasCost))) {
+            throw new Error('Gas cost exceeds risk tolerance');
+        }
 
-      async checkArbitrageOpportunity(
-          tokenAddress: string,
-          amount: string,
-          exchanges: string[]
-      ): Promise<{profitable: boolean, expectedProfit: number}> {
-          const prices = await Promise.all(
-              exchanges.map(exchange => 
-                  this.exchangeManager.getPrice(exchange, tokenAddress)
-              )
-          );
+        // Execute Aave V2 flash loan
+        const tx = await this.lendingPool.flashLoan(
+            this.wallet.address,     // receiver (this contract/wallet)
+            [tokenAddress],
+            [amount],
+            [0],                     // 0 = no debt, must repay in same tx
+            this.wallet.address,
+            '0x',
+            0
+        );
+        return tx.wait();
+    }
 
-          const maxPrice = Math.max(...prices);
-          const minPrice = Math.min(...prices);
-        
-          // Calculate potential profit including flash loan fee (0.09%)
-          const flashLoanFee = ethers.utils.parseUnits(amount, 18).mul(9).div(10000);
-          const potentialProfit = maxPrice - minPrice - flashLoanFee;
-        
-          return {
-              profitable: potentialProfit > 0,
-              expectedProfit: potentialProfit
-          };
-      }
+    private async isWithinRiskTolerance(gasCost: ethers.BigNumber): Promise<boolean> {
+        const balance = await this.wallet.getBalance();
+        const maxRisk = balance.mul(20).div(100); // 20% risk tolerance
+        return gasCost.lte(maxRisk);
+    }
 
-      async executeArbitrage(
-          tokenAddress: string,
-          amount: string,
-          sourceExchange: string,
-          targetExchange: string
-      ) {
-          // Add Flashbots protection
-          const flashbotsProvider = await this.setupFlashbots();
-        
-          const transaction = {
-              to: this.contractAddress,
-              data: this.encodeFlashLoanCall(tokenAddress, amount),
-              gasLimit: 500000
-          };
+    async checkArbitrageOpportunity(
+        tokenAddress: string,
+        amount: string,
+        exchanges: string[]
+    ): Promise<{profitable: boolean, expectedProfit: number}> {
+        const prices = await Promise.all(
+            exchanges.map(exchange =>
+                this.exchangeManager.fetchPrice(exchange, tokenAddress).catch(() => 0)
+            )
+        );
 
-          // Submit via Flashbots to prevent front-running
-          const response = await flashbotsProvider.sendBundle([
-              {
-                  transaction,
-                  signer: this.wallet
-              }
-          ]);
+        const validPrices = prices.filter(p => p > 0);
+        if (validPrices.length < 2) return { profitable: false, expectedProfit: 0 };
 
-          return response.wait();
-      }
+        const maxPrice = Math.max(...validPrices);
+        const minPrice = Math.min(...validPrices);
+      
+        // Flash loan fee: 0.09% on Aave V2
+        const amountNum = parseFloat(amount);
+        const flashLoanFee = amountNum * 0.0009;
+        const potentialProfit = (maxPrice - minPrice) * amountNum - flashLoanFee;
+      
+        return {
+            profitable: potentialProfit > 0,
+            expectedProfit: potentialProfit
+        };
+    }
 
-      private async setupFlashbots() {
-          // Flashbots setup code here
-          // This helps prevent front-running
-      }
-  }
+    async executeArbitrage(
+        tokenAddress: string,
+        amount: string,
+        sourceExchange: string,
+        targetExchange: string
+    ) {
+        console.log(`⚡ Executing flash loan arbitrage: ${tokenAddress} amount=${amount} ${sourceExchange} -> ${targetExchange}`);
+        return this.executeFlashLoan(tokenAddress, amount);
+    }
+}
