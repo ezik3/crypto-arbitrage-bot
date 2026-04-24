@@ -49,7 +49,7 @@ export class FeeCalculator {
         assetPriceUsd: number
     ): number {
         const ex = exchangeName.toLowerCase();
-        const assetUpper = asset.toUpperCase().replace('USDT', 'USDT');
+        const assetUpper = asset.toUpperCase();
         const fee = WITHDRAWAL_FEES[ex]?.[assetUpper] ?? 0;
         if (assetUpper === 'USDT' || assetUpper === 'USDC' || assetUpper === 'DAI') {
             return fee;
