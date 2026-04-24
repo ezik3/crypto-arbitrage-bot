@@ -1,19 +1,22 @@
 
-import { ILendingPool } from '@aave/protocol-v2';
+// Aave V2 Lending Pool interface (inline to avoid external package dependency)
+interface ILendingPool {
+    flashLoan(
+        receiverAddress: string,
+        assets: string[],
+        amounts: string[],
+        modes: number[],
+        onBehalfOf: string,
+        params: string,
+        referralCode: number
+    ): Promise<any>;
+}
+
 import { config } from '../config';
 
 export class FlashLoanManager {
-    private lendingPool: ILendingPool;
-    
-    constructor() {
-        this.initializeLendingPool();
-    }
-
-    private async initializeLendingPool() {
-        // Aave lending pool initialization
-    }
-
+    // Kept for compatibility – actual flash loan logic lives in defi/flashLoanManager.ts
     async executeFlashLoan(asset: string, amount: string) {
-        // Flash loan execution
+        // Delegated to defi/flashLoanManager.ts
     }
 }

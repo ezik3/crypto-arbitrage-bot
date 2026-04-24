@@ -10,8 +10,21 @@ import { TokenSniper } from '../sniping/tokenSniper';
 import { SniperIntegration } from '../dex/integration/sniperIntegration';
 import { DEX_CONFIGS, RPC_URLS } from '../config/dexConfig';
 import { PairManager } from '../utils/pairManager';
+import { ExecutionManager, ExecutionStrategy } from '../execution/executionManager';
+import { RiskManager } from '../risk/riskManager';
+import { FeeCalculator } from '../fees/calculator';
 
 type BaseAsset = 'USDT' | 'BTC' | 'ETH';
+
+// Base asset prices in USD (replace with live feed in production)
+const ASSET_PRICE_USD: Record<string, number> = {
+    BTC: 60000,
+    ETH: 2000,
+    USDT: 1,
+    USDC: 1,
+    SOL: 150,
+    BNB: 400
+};
 
 export class ArbitrageOrchestrator {
     private profitManager: ProfitManager;
@@ -27,16 +40,26 @@ export class ArbitrageOrchestrator {
     private tokenSniper: TokenSniper;
     private sniperIntegration: SniperIntegration;
     private pairManager: PairManager;
+    private executionManager: ExecutionManager;
+    private riskManager: RiskManager;
+    private feeCalculator: FeeCalculator;
+
+    // Capital management: start from the configured amount and grow
+    private capitalUsd: number = parseFloat(process.env.INITIAL_CAPITAL_USD ?? '50');
 
     constructor() {
         this.exchangeManager = new ExchangeManager();
-        
+
         this.profitManager = new ProfitManager();
         this.marketAnalyzer = new MarketImpactAnalyzer();
-        this.orderManager = new OrderManager();
+        this.orderManager = new OrderManager(this.exchangeManager);
         this.flashLoanManager = new FlashLoanManager(this.exchangeManager);
         this.triangularArbitrage = new TriangularArbitrage(this.exchangeManager);
         this.priceScanner = new PriceScanner(this.exchangeManager);
+        this.executionManager = new ExecutionManager(this.exchangeManager);
+        this.riskManager = new RiskManager();
+        this.feeCalculator = new FeeCalculator();
+
         this.tokenSniper = new TokenSniper(
             process.env.ETH_RPC_URL || 'https://eth-mainnet.g.alchemy.com/v2/your-api-key',
             process.env.LIVECOINWATCH_API_KEY || '',
@@ -51,7 +74,6 @@ export class ArbitrageOrchestrator {
             }
         );
 
-        // Add new integration
         this.sniperIntegration = new SniperIntegration(
             this.tokenSniper,
             DEX_CONFIGS,
@@ -63,12 +85,10 @@ export class ArbitrageOrchestrator {
 
     public async initialize(): Promise<void> {
         console.log('Initializing arbitrage orchestrator...');
-        
-        // Initialize exchanges without parameters
+
         await this.exchangeManager.initializeExchanges();
-        
+
         console.log('Initializing arbitrage system...');
-        await this.exchangeManager.initializeExchanges();
         console.log('Arbitrage system initialized successfully');
 
         // Initialize Gate.io with retry mechanism
@@ -88,32 +108,46 @@ export class ArbitrageOrchestrator {
                 retryCount++;
             }
         } else {
-            console.log('��️ Gate.io exchange not initialized - skipping pairs fetch');
+            console.log('⚠️ Gate.io exchange not initialized - skipping pairs fetch');
         }
+
+        console.log(`💰 Starting capital: $${this.capitalUsd.toFixed(2)}`);
+        console.log(`🔵 Dry-run mode: ${process.env.DRY_RUN !== 'false' ? 'ON (set DRY_RUN=false to trade live)' : 'OFF — LIVE TRADING'}`);
+    }
+
+    /**
+     * Scan all opportunity types and return combined results.
+     * Exposed for use by the simulation runner and external callers.
+     */
+    public async scanAllOpportunities(): Promise<any[]> {
+        return this.priceScanner.scanForArbitrageOpportunities();
     }
 
     public async startArbitrageLoop(): Promise<void> {
         console.log('Starting continuous arbitrage scanning...');
-        
+
         while (true) {
             try {
                 const allPairs = this.pairManager.getAllUniquePairs();
                 console.log('\n🔍 Starting new scan cycle...');
                 console.log(`Scanning ${allPairs.length} trading pairs across ${config.exchanges.length} exchanges...`);
-                
-                // Track scan start time
+                console.log(`💰 Current capital: $${this.capitalUsd.toFixed(2)}`);
+
                 const scanStartTime = Date.now();
 
-                // 1. Price Scanner Opportunities
+                // 1. Price Scanner (cross-exchange) Opportunities
                 const priceOpps = await this.priceScanner.scanForArbitrageOpportunities();
                 if (priceOpps.length > 0) {
                     console.log('\n💹 Price Arbitrage Opportunities:');
                     priceOpps.forEach(opp => {
                         console.log(`${opp.pair}: Buy at ${opp.buyPrice} on ${opp.buyExchange}, Sell at ${opp.sellPrice} on ${opp.sellExchange}, Profit: ${opp.profit.toFixed(2)}%`);
                     });
+
+                    // Execute the most profitable opportunity after risk/fee checks
+                    await this.executeBestOpportunity(priceOpps);
                 }
 
-                // 2. Regular arbitrage opportunities with market impact
+                // 2. Market impact analysis
                 const marketData = await this.marketAnalyzer.analyzeMarketImpact({
                     timeframe: '1m',
                     minProfit: 0.5
@@ -121,8 +155,14 @@ export class ArbitrageOrchestrator {
 
                 // 3. Flash loan opportunities
                 const flashLoanOpps = await this.flashLoanManager.findFlashLoanOpportunities();
+                if (flashLoanOpps.opportunities.length > 0) {
+                    console.log('\n⚡ Flash Loan Opportunities:');
+                    flashLoanOpps.opportunities.forEach(opp => {
+                        console.log(`  ${opp.token}: Loan ${opp.amount} → Net Profit $${opp.netProfit.toFixed(2)}`);
+                    });
+                }
 
-                // 4. Triangular arbitrage with progress tracking
+                // 4. Triangular arbitrage
                 for (const exchange of config.exchanges) {
                     console.log(`\n📊 Scanning ${exchange.name.toUpperCase()} for triangular opportunities...`);
                     const baseAssets: BaseAsset[] = ['USDT', 'BTC', 'ETH'];
@@ -133,10 +173,9 @@ export class ArbitrageOrchestrator {
                     }
                 }
 
-                // Add token sniping scan
-                await this.checkNewTokens();
+                // 5. Token sniping (no infinite recursion)
+                await this.checkNewTokensSafe();
 
-                // Scan completion summary
                 const scanDuration = ((Date.now() - scanStartTime) / 1000).toFixed(2);
                 console.log('\n📈 Scan Cycle Summary:');
                 console.log(`⏱️  Scan Duration: ${scanDuration}s`);
@@ -145,8 +184,7 @@ export class ArbitrageOrchestrator {
                 console.log(`⚡ Flash Loan Opportunities: ${flashLoanOpps.opportunities?.length || 0}`);
                 console.log('------------------------');
 
-                // Dynamic delay based on market activity
-                const delay = priceOpps.length > 0 ? 1000 : 3000; // Faster updates when opportunities exist
+                const delay = priceOpps.length > 0 ? 1000 : 3000;
                 await new Promise(resolve => setTimeout(resolve, delay));
 
             } catch (err: any) {
@@ -159,6 +197,57 @@ export class ArbitrageOrchestrator {
         }
     }
 
+    /**
+     * Execute the single best cross-exchange opportunity after risk and fee checks.
+     */
+    private async executeBestOpportunity(opportunities: any[]): Promise<void> {
+        if (opportunities.length === 0) return;
+
+        const ranked = this.profitManager.rankOpportunities(opportunities);
+        const best = ranked[0];
+
+        const asset = best.pair?.split('/')?.[0] ?? 'USDT';
+        const assetPrice = ASSET_PRICE_USD[asset] ?? 1;
+        const tradeSize = this.riskManager.getRecommendedTradeSize(this.capitalUsd);
+        const amount = tradeSize / (best.buyPrice || 1);
+
+        // Fee-aware profitability check
+        const profitResult = await this.profitManager.analyzeProfitability({
+            type: 'cross',
+            pair: best.pair,
+            profit: best.profit,
+            volume: tradeSize,
+            buyExchange: best.buyExchange,
+            sellExchange: best.sellExchange,
+            assetPriceUsd: assetPrice
+        });
+
+        if (!profitResult.isProfitable) {
+            console.log(`💸 ${best.pair} unprofitable after fees (net: $${profitResult.netProfitUsd.toFixed(4)})`);
+            return;
+        }
+
+        const strategy: ExecutionStrategy = {
+            type: 'cross',
+            pair: best.pair,
+            buyExchange: best.buyExchange,
+            sellExchange: best.sellExchange,
+            buyPrice: best.buyPrice,
+            sellPrice: best.sellPrice,
+            amount,
+            tradeAmountUsd: tradeSize,
+            profitPercent: best.profit,
+            capitalUsd: this.capitalUsd
+        };
+
+        const result = await this.executionManager.executeStrategy(strategy);
+
+        if (result.success && result.netProfitUsd > 0) {
+            this.capitalUsd += result.netProfitUsd;
+            console.log(`💰 Capital updated: $${this.capitalUsd.toFixed(2)} (+$${result.netProfitUsd.toFixed(4)})`);
+        }
+    }
+
     private async checkProfitability(opportunity: any): Promise<boolean> {
         try {
             const profitAnalysis = await this.profitManager.analyzeProfitability({
@@ -167,7 +256,6 @@ export class ArbitrageOrchestrator {
                 profit: opportunity.profitPercent,
                 volume: opportunity.volume
             });
-
             return profitAnalysis.isProfitable;
         } catch (error) {
             console.error('Error checking profitability:', error);
@@ -178,7 +266,7 @@ export class ArbitrageOrchestrator {
     private async logOpportunityDetails(opportunity: any, type: 'triangular' | 'flash' | 'cross'): Promise<void> {
         console.log('\n💰 Opportunity Found:');
         console.log(`📊 Type: ${type.toUpperCase()}`);
-        
+
         if (type === 'triangular') {
             console.log(`🔄 Path: ${opportunity.path.join(' -> ')}`);
             console.log(`💵 Initial Amount: ${opportunity.initialAmount} ${opportunity.baseAsset}`);
@@ -196,25 +284,31 @@ export class ArbitrageOrchestrator {
         }
     }
 
-    private async checkNewTokens(): Promise<void> {
-        try {
-            const newTokens = await this.tokenSniper.scanForNewTokens();
-            if (newTokens.length > 0) {
-                console.log('\n🔍 New Token Opportunities:');
-                newTokens.forEach(token => {
-                    console.log(`Token: ${token.address}`);
-                    console.log(`Liquidity: $${token.liquidity}`);
-                    console.log(`Security Score: ${token.securityScore}`);
-                    console.log('------------------------');
-                });
+    /**
+     * Token sniping with bounded retries — no infinite recursion.
+     */
+    private async checkNewTokensSafe(): Promise<void> {
+        const maxAttempts = 3;
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const newTokens = await this.tokenSniper.scanForNewTokens();
+                if (newTokens.length > 0) {
+                    console.log('\n🔍 New Token Opportunities:');
+                    newTokens.forEach(token => {
+                        console.log(`Token: ${token.address}`);
+                        console.log(`Liquidity: $${token.liquidity}`);
+                        console.log(`Security Score: ${token.securityScore}`);
+                        console.log('------------------------');
+                    });
+                }
+                return;
+            } catch (error: unknown) {
+                const msg = error instanceof Error ? error.message : 'Unknown error';
+                console.error(`Error scanning for new tokens (attempt ${attempt}/${maxAttempts}):`, msg);
+                if (attempt < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
+                }
             }
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            console.error('Error scanning for new tokens:', errorMessage);
-            // Add retry mechanism with backoff
-            const retryDelay = 5000;
-            await new Promise(resolve => setTimeout(resolve, retryDelay));
-            await this.checkNewTokens();
         }
     }
 }
