@@ -91,7 +91,7 @@ export class TokenSniper {
 
     private calculateInvestmentAmount(token: TokenMetadata): number {
         // Implement your investment sizing logic
-        return Settings.trading.maxInvestment;
+        return Settings.trading.maxInvestmentETH;
     }
 
     private async getCurrentPrice(token: TokenMetadata): Promise<number> {

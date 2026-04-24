@@ -53,7 +53,7 @@ export const Settings = {
         maxSellTax: 10,       // Maximum sell tax percentage
         minHolders: 50,       // Minimum number of holders
         minSecurityScore: 70, // Minimum security score out of 100
-        maxInvestment: 0.1    // Maximum investment in ETH
+        maxInvestmentETH: 0.1    // Maximum investment in ETH
     },
 
     dexscreener: {
